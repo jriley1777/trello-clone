@@ -23,7 +23,6 @@ const PageWrapper = styled(Container).attrs({
   font-size: 1rem;
 `;
 
-<<<<<<< HEAD
 const AppTitle = styled(RouterLink).attrs({
   className: "appTitle"
 })`
@@ -43,12 +42,6 @@ const StyledPaper = styled(Paper)`
 `;
 
 const Auth: React.FC = () => {
-=======
-const Auth: React.FC = () => {
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-  }
->>>>>>> add redux store and starter auth reducer
     return (
       <PageWrapper>
         <AppTitle to={Constants.URLS.INDEX}>{Constants.APP_NAME}</AppTitle>
