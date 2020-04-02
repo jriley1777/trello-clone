@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import firebase from '../utils/firebase';
 import { Link as RouterLink } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
@@ -9,12 +10,66 @@ import * as Constants from '../constants/index';
 import AuthLayout from '../components/AuthLayout/AuthLayout';
 import AuthCard from '../components/AuthCard/AuthCard';
 
+type ErrorsArrayType = {message: string}[];
 
 const Auth: React.FC = () => {
+  const [ email, setEmail ] = useState('');
+  const [ password, setPassword ] = useState('');
+  const [ errors, setErrors ] = useState<ErrorsArrayType>([]);
+  const usersRef = firebase.database().ref("users");
+
+  const isValidForm = () => email && password;
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    if(isValidForm()) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .catch(err => setErrors([{ message: err.message }]));
+    }
   }
+
+  const saveUser = (user: any) => {
+    return usersRef.child(user.uid).set({
+      name: user.displayName,
+      photoURL: user.photoURL || "",
+      email: user.email
+    });
+  };
+
+  const handleGoogleRedirect = () => {
+    firebase
+      .auth()
+      .getRedirectResult()
+      .then(function(result) {
+        if (result.credential) {
+          console.log(result);
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          // var token = result.credential.accessToken;
+          // ...
+        }
+        // The signed-in user info.
+        var user: any = result.user;
+        saveUser(user).then(() => {
+          console.log("user saved.");
+        });
+      })
+      .catch(err => {
+        setErrors([{ message: err.message }]);
+      });
+  };
+
+  useEffect(() => {
+    handleGoogleRedirect();
+  }, []);
+
+  const handleGoogleLogin = () => {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
+  };
+
+
     return (
       <AuthLayout>
         <AuthCard>
@@ -37,6 +92,8 @@ const Auth: React.FC = () => {
                   label="Email"
                   name="email"
                   type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item>
@@ -47,16 +104,22 @@ const Auth: React.FC = () => {
                   label="Password"
                   name="password"
                   type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                 />
               </Grid>
               <Grid item>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" type="submit">
                   Log in
                 </Button>
               </Grid>
               or
               <Grid item>
-                <Button variant="contained" color="default">
+                <Button
+                  variant="contained"
+                  color="default"
+                  onClick={handleGoogleLogin}
+                >
                   Log in with Google
                 </Button>
               </Grid>

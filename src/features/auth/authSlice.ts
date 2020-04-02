@@ -1,19 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface User {
+  user : {
+    email: string,
+    displayName: string,
+    photoURL?: string,
+    uid: string
+  }
+}
 const auth = createSlice({
   name: "auth",
   initialState: {},
   reducers: {
-    setAuth(state, action) {
-      const { auth } = action.payload;
-      return (state = { auth });
+    setUser(state, action) {
+      const { user }: User = action.payload;
+      return state = { 
+        user,
+        isLoggedIn: true
+      };
     },
-    clearAuth(state) {
-      return (state = { auth: "" });
+    clearUser(state) {
+      return state = { 
+        user: "",
+        isLoggedIn: false
+      };
     }
   }
 });
 
-export const { setAuth, clearAuth } = auth.actions;
+export const { setUser, clearUser } = auth.actions;
 
 export default auth.reducer;

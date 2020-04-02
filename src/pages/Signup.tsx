@@ -22,6 +22,7 @@ const Signup: React.FC<SignupProps> = ({ location }) => {
   const [ password, setPassword ] = useState('');
   const [ loading, setLoading ] = useState(false);
   const [ errors, setErrors] = useState<ErrorsArrayType>([]);
+  const usersRef = firebase.database().ref("users");
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,22 +32,66 @@ const Signup: React.FC<SignupProps> = ({ location }) => {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then((createdUser: any) => {
-          createdUser.user
+          let user = createdUser.user;
+          user
             .updateProfile({
               displayName: name
             })
-          setLoading(false);
-        })
-        .catch(err => {
-          setErrors([{ message: err.message }]);
-          setLoading(false);
-        });
+            .then(() => {
+              saveUser(user).then(() => {
+                console.log("user saved.")
+              })
+            })
+            .catch((err: any) => {
+              setErrors([{message: err.message}])
+            });
+            saveUser(user);
+            setLoading(false);
+          })
+          .catch((err: any) => {
+            setErrors([{ message: err.message }]);
+            setLoading(false);
+          });
     }
   };
 
-  const handleGoogleAuth = () => {
-    let googleProvider = new firebase.auth.GoogleAuthProvider(); 
-    return null;
+  const handleGoogleRedirect = () => {
+    firebase
+      .auth()
+      .getRedirectResult()
+      .then(function(result) {
+        if (result.credential) {
+          console.log(result)
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          // var token = result.credential.accessToken;
+          // ...
+        }
+        // The signed-in user info.
+        var user: any = result.user;
+        saveUser(user).then(() => {
+          console.log("user saved.");
+        });
+      })
+      .catch(err => {
+        setErrors([{ message: err.message }]);;
+      });
+  }
+
+  useEffect(() => {
+    handleGoogleRedirect();
+  }, []);
+
+  const handleGoogleLogin = () => {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
+  }
+  
+  const saveUser = (user: any) => {
+    return usersRef.child(user.uid).set({
+      name: user.displayName,
+      photoURL: user.photoURL || "",
+      email: user.email
+    });
   };
 
   const isValidForm = () => {
@@ -63,7 +108,7 @@ const Signup: React.FC<SignupProps> = ({ location }) => {
     if (parsedEmail && typeof parsedEmail === 'string') {
       setEmail(parsedEmail);
     }
-  }; 
+  };
 
   useEffect(() => {
     parseURIParams();
@@ -127,18 +172,17 @@ const Signup: React.FC<SignupProps> = ({ location }) => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                disabled={!isValidForm() || loading || errors.length > 0}
+                disabled={!isValidForm() || loading}
               >
-                Continue
+                Sign up
               </Button>
             </Grid>
             or
             <Grid item>
-              <Button
-                variant="contained"
-                color="default"
-                onClick={handleGoogleAuth}
-              >
+              <Button 
+                onClick={ handleGoogleLogin }
+                variant="contained" 
+                color="default">
                 Continue with Google
               </Button>
             </Grid>
