@@ -9,7 +9,7 @@ const StyledPlaceholder = styled(Paper)`
     width: 100%;
     height: 50%;
     background: rgba(255, 255, 255, 0.1) !important;
-    border: 2px dashed rgba(0,0,0,0.2);
+    border: 2px dashed rgba(0,0,0,0.1);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,7 +31,7 @@ interface PlaceholderProps {
 const Placeholder: React.FC<PlaceholderProps> = ({ width, height }) => {
     return (
       <div style={{width, height}}>
-        <StyledPlaceholder elevation={3}>placeholder</StyledPlaceholder>
+        <StyledPlaceholder elevation={0}>placeholder</StyledPlaceholder>
       </div>
     );
 };
