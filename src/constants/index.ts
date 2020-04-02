@@ -14,14 +14,17 @@ export const URLS = {
     LOGIN: '/login',
     LOGOUT: '/logout',
     SIGNUP: '/signup',
-    USER: '/user',
-    BOARD: '/boards'
+    USER: '/:userId/boards',
+    BOARD: '/b/:boardId/taskboard'
 };
 
-export const getUserRoute: (id: string) => string = (userId: string) => 
-    `/${URLS.USER}/${userId}`;
-export const getBoardRoute: (id: string) => string = (boardId: string) => 
-    `/${URLS.BOARD}/${boardId}`;
+export const buildUserURI = (userId: string) => {
+    return `/${userId}/boards`;
+}
+
+export const buildBoardURI = (boardId: string) => {
+  return `/b/${boardId}/taskboard`;
+};
 
 export const ROUTES = [
     {
@@ -46,12 +49,12 @@ export const ROUTES = [
     },
     {
     route: URLS.USER,
-    exact: false,
+    exact: true,
     component: UserHome
     },
     {
     route: URLS.BOARD,
-    exact: false,
+    exact: true,
     component: Board
     },
     {
