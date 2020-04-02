@@ -1,5 +1,6 @@
 import Splash from '../pages/Splash';
-import Auth from '../pages/Auth';
+import Login from '../pages/Login';
+import Signup from '../pages/Signup';
 import Logout from '../pages/Logout';
 import Board from '../pages/Board';
 import UserHome from '../pages/UserHome';
@@ -31,12 +32,12 @@ export const ROUTES = [
     {
     route: URLS.LOGIN,
     exact: true,
-    component: Auth
+    component: Login
     },
     {
     route: URLS.SIGNUP,
     exact: true,
-    component: Auth
+    component: Signup
     },
     {
     route: URLS.LOGOUT,
