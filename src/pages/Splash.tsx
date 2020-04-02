@@ -4,7 +4,6 @@ import { Link, withRouter } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
-
 import Header from '../components/Header/Header';
 import Placeholder from '../components/Placeholder/Placeholder';
 
@@ -122,6 +121,9 @@ const Splash: React.FC<SplashTypes> = ({ history }) => {
     const handleEmailSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if(email){
+          let uriEmail = `email=${encodeURI(email)}`;
+          let url = `${Constants.URLS.SIGNUP}?${uriEmail}`;
+          history.push(url)
             console.log(email);
         }
     }

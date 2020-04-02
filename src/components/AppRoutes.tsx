@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { ROUTES } from '../constants/index';
 
 const AppRoutes = () => {
@@ -7,11 +7,9 @@ const AppRoutes = () => {
         return <Route key={route} path={route} exact={exact} component={component} />
     });
     return (
-        <Router>
-            <Switch>
-                { renderRoutes() }
-            </Switch>
-        </Router>
+        <Switch>
+            { renderRoutes() }
+        </Switch>
     )
 };
 
