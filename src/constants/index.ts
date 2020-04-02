@@ -5,6 +5,9 @@ import Board from '../pages/Board';
 import UserHome from '../pages/UserHome';
 import MissingPage from '../pages/Missing';
 
+
+export const APP_NAME="Taskboard";
+
 export const URLS = {
     INDEX: '/',
     LOGIN: '/login',
