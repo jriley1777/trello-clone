@@ -4,31 +4,34 @@ import { Link, withRouter } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
+import DnsIcon from "@material-ui/icons/Dns";
 import Header from '../components/Header/Header';
 import Placeholder from '../components/Placeholder/Placeholder';
+import Footer from '../components/Footer/Footer';
 
 import * as Constants from '../constants/index';
 
 const PageWrapper = styled(Container).attrs({
-    className: 'page'
+  className: "page"
 })`
-    width: 100%;
-    height: 100%;
-    min-width: 100vw;
-    min-height: 100vh;
-    background: linear-gradient(
-        to bottom right, 
-        rgb(0,120,190), 
-        rgb(80,105,195)
-    );
- `;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 100vw;
+  min-height: 100vh;
+  background: linear-gradient(
+    to bottom right,
+    rgb(0, 120, 190),
+    rgb(80, 105, 195)
+  );
+`;
 
 const AppTitle = styled(Link).attrs({
   className: "appTitle"
 })`
   text-decoration: none;
   margin: 0;
-  padding: 20px;
+  padding-left: 20px;
   color: white;
   font-size: 2rem;
   font-family: Pacifico;
@@ -130,20 +133,31 @@ const Splash: React.FC<SplashTypes> = ({ history }) => {
     return (
       <PageWrapper maxWidth="xl">
         <Header>
-          <AppTitle to={ Constants.URLS.INDEX }>{appName}</AppTitle>
-          <section style={{marginLeft: 'auto', marginRight:'20px'}}>
-            <StyledLink to={ Constants.URLS.LOGIN }>Login</StyledLink>
-            <Button 
-                variant="contained" 
-                onClick={() => history.push(Constants.URLS.SIGNUP)}>
+          <AppTitle to={Constants.URLS.INDEX}>
+            <DnsIcon
+              style={{
+                transform: "rotate(90deg)",
+                width: "auto",
+                height: "2rem",
+                paddingLeft: "5px"
+              }}
+            />
+            {appName}
+          </AppTitle>
+          <section style={{ marginLeft: "auto", marginRight: "20px" }}>
+            <StyledLink to={Constants.URLS.LOGIN}>Login</StyledLink>
+            <Button
+              variant="contained"
+              onClick={() => history.push(Constants.URLS.SIGNUP)}
+            >
               Sign Up
             </Button>
           </section>
         </Header>
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" style={{paddingBottom:'2rem'}}>
           <Hero>
             <div>
-              <h1 style={{margin: 0}}>
+              <h1 style={{ margin: 0 }}>
                 <strong>
                   {appName} is a simple collaborative tool with flexibility for
                   all.
@@ -154,25 +168,27 @@ const Splash: React.FC<SplashTypes> = ({ history }) => {
                 will help you stay organized from inception to completion.
               </h5>
             </div>
-            <Placeholder/> 
+            <Placeholder />
           </Hero>
           <StyledEmailForm onSubmit={handleEmailSubmit}>
             <StyledTextField
-                id="email-basic"
-                label="Email"
-                name="email"
-                onChange={(e) => setEmail(e.target.value)}
-                variant="filled"
+              id="email-basic"
+              label="Email"
+              name="email"
+              onChange={e => setEmail(e.target.value)}
+              variant="filled"
             />
-            <StyledSubmitButton 
-                type="submit"
-                variant="contained" 
-                color="primary" 
-                size="large">
-                Sign up! - It's free
+            <StyledSubmitButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+            >
+              Sign up! - It's free
             </StyledSubmitButton>
           </StyledEmailForm>
         </Container>
+        <Footer light/>
       </PageWrapper>
     );
 };
