@@ -7,10 +7,15 @@ interface User {
     photoURL?: string,
     uid: string
   }
-}
+};
+
+
 const auth = createSlice({
   name: "auth",
-  initialState: {},
+  initialState: {
+    user: {},
+    isLoggedIn: false
+  },
   reducers: {
     setUser(state, action) {
       const { user }: User = action.payload;

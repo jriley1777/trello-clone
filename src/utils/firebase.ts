@@ -18,4 +18,19 @@ import "firebase/database";
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
 
+  export const usersDb = () => {
+    const usersRef = firebase.database().ref('users');
+    const saveUser = (user: any) => {
+      return usersRef.child(user.uid).set({
+        name: user.displayName,
+        photoURL: user.photoURL || "",
+        email: user.email
+      });
+    };
+
+    return {
+      saveUser
+    }
+  }
+
   export default firebase;

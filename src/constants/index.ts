@@ -27,39 +27,46 @@ export const buildBoardURI = (boardId: string) => {
 };
 
 export const ROUTES = [
-    {
-    route: URLS.INDEX,
-    exact: true,
-    component: Splash
-    },
-    {
-    route: URLS.LOGIN,
-    exact: true,
-    component: Login
-    },
-    {
-    route: URLS.SIGNUP,
-    exact: true,
-    component: Signup
-    },
-    {
-    route: URLS.LOGOUT,
-    exact: true,
-    component: Logout
-    },
-    {
-    route: URLS.USER,
-    exact: true,
-    component: UserHome
-    },
-    {
-    route: URLS.BOARD,
-    exact: true,
-    component: Board
-    },
-    {
-    route: URLS.INDEX,
-    exact: false,
-    component: MissingPage
-    }
-];
+         {
+           route: URLS.INDEX,
+           exact: true,
+           component: Splash,
+           isPrivate: false
+         },
+         {
+           route: URLS.LOGIN,
+           exact: true,
+           component: Login,
+           isPrivate: false
+         },
+         {
+           route: URLS.SIGNUP,
+           exact: true,
+           component: Signup,
+           isPrivate: false
+         },
+         {
+           route: URLS.LOGOUT,
+           exact: true,
+           component: Logout,
+           isPrivate: false
+         },
+         {
+           route: URLS.USER,
+           exact: true,
+           component: UserHome,
+           isPrivate: true
+         },
+         {
+           route: URLS.BOARD,
+           exact: true,
+           component: Board,
+           isPrivate: true
+         },
+         {
+           route: URLS.INDEX,
+           exact: false,
+           component: MissingPage,
+           isPrivate: false
+         }
+       ];
