@@ -15,6 +15,7 @@ interface RootProps {
   history: any
 }
 const Root: React.FC<RootProps> = ({ history }) => {
+  document.title = "Taskboard";
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 

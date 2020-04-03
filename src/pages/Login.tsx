@@ -17,6 +17,7 @@ interface AuthProps {
 }
 
 const Auth: React.FC<AuthProps> = ({ history }) => {
+  document.title = "Login to Taskboard";
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ errors, setErrors ] = useState<ErrorsArrayType>([]);

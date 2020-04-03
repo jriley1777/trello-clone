@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import firebase from '../utils/firebase';
 
 const UserHome = () => {
+    document.title = "Boards | Taskboard";
     const { userId } = useParams();
     const [ user, setUser ] = useState({name: '', photoURL: ''});
     const usersRef = firebase.database().ref('users');
