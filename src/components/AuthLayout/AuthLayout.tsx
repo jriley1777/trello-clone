@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import { Link as RouterLink } from "react-router-dom";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import DnsIcon from "@material-ui/icons/Dns";
 
 import Placeholder from "../Placeholder/Placeholder";
+import Footer from '../Footer/Footer';
 import * as Constants from "../../constants/index";
 
 const PageWrapper = styled(Container).attrs({
@@ -33,7 +35,17 @@ const AppTitle = styled(RouterLink).attrs({
 const AuthLayout: React.FC = ({ children }) => {
     return (
       <PageWrapper>
-        <AppTitle to={Constants.URLS.INDEX}>{Constants.APP_NAME}</AppTitle>
+        <AppTitle to={Constants.URLS.INDEX}>
+          <DnsIcon
+            style={{
+              transform: "rotate(90deg)",
+              width: "auto",
+              height: "2rem",
+              paddingLeft: "5px"
+            }}
+          />
+          {Constants.APP_NAME}
+        </AppTitle>
         <Grid
           style={{ marginTop: "2rem" }}
           container
@@ -53,6 +65,7 @@ const AuthLayout: React.FC = ({ children }) => {
             <Placeholder height="40vh" />
           </Grid>
         </Grid>
+        <Footer light={false} />
       </PageWrapper>
     );
 };
