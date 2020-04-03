@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import firebase from '../utils/firebase'
+import firebase, { usersDb } from '../utils/firebase'
 import * as qs from "query-string";
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
@@ -11,18 +11,19 @@ import AuthCard from '../components/AuthCard/AuthCard';
 import * as Constants from '../constants/index';
 
 interface SignupProps {
-  location: any 
+  location: any ,
+  history: any
 }
 
 type ErrorsArrayType = {message: string}[];
 
-const Signup: React.FC<SignupProps> = ({ location }) => {
+const Signup: React.FC<SignupProps> = ({ location, history }) => {
   const [ email, setEmail ] = useState('');
   const [ name, setName ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ loading, setLoading ] = useState(false);
   const [ errors, setErrors] = useState<ErrorsArrayType>([]);
-  const usersRef = firebase.database().ref("users");
+  const db: any = usersDb();
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,14 +39,14 @@ const Signup: React.FC<SignupProps> = ({ location }) => {
               displayName: name
             })
             .then(() => {
-              saveUser(user).then(() => {
+              db.saveUser(user).then(() => {
                 console.log("user saved.")
               })
             })
             .catch((err: any) => {
               setErrors([{message: err.message}])
             });
-            saveUser(user);
+            history.push(Constants.buildUserURI(user.uid));
             setLoading(false);
           })
           .catch((err: any) => {
@@ -68,9 +69,10 @@ const Signup: React.FC<SignupProps> = ({ location }) => {
         }
         // The signed-in user info.
         var user: any = result.user;
-        saveUser(user).then(() => {
+        db.saveUser(user).then(() => {
           console.log("user saved.");
         });
+        history.push(Constants.buildUserURI(user.uid))
       })
       .catch(err => {
         setErrors([{ message: err.message }]);;
@@ -85,14 +87,6 @@ const Signup: React.FC<SignupProps> = ({ location }) => {
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
   }
-  
-  const saveUser = (user: any) => {
-    return usersRef.child(user.uid).set({
-      name: user.displayName,
-      photoURL: user.photoURL || "",
-      email: user.email
-    });
-  };
 
   const isValidForm = () => {
    if (email && name && password) {
