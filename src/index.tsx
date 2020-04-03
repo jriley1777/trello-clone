@@ -29,7 +29,7 @@ const Root: React.FC<RootProps> = ({ history }) => {
           user: {
             email: user.email,
             displayName: user.displayName,
-            avatar: user.photoURL,
+            photoURL: user.photoURL,
             uid: user.uid
           }
         }));

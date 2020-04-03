@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import firebase, { usersDb } from '../utils/firebase';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, RouteComponentProps } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
 import Button from '@material-ui/core/Button';
@@ -12,29 +12,25 @@ import AuthCard from '../components/AuthCard/AuthCard';
 
 type ErrorsArrayType = {message: string}[];
 
-interface AuthProps {
-  history: any
-}
-
-const Auth: React.FC<AuthProps> = ({ history }) => {
+const Login: React.FC<RouteComponentProps> = ({ history }) => {
   document.title = "Login to Taskboard";
-  const [ email, setEmail ] = useState('');
-  const [ password, setPassword ] = useState('');
-  const [ errors, setErrors ] = useState<ErrorsArrayType>([]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<ErrorsArrayType>([]);
   const db: any = usersDb();
 
   const isValidForm = () => email && password;
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if(isValidForm()) {
+    if (isValidForm()) {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(user => history.push(Constants.buildUserURI(user.user!.uid)))
         .catch(err => setErrors([{ message: err.message }]));
     }
-  }
+  };
 
   const handleGoogleRedirect = () => {
     firebase
@@ -68,70 +64,69 @@ const Auth: React.FC<AuthProps> = ({ history }) => {
     firebase.auth().signInWithRedirect(provider);
   };
 
-
-    return (
-      <AuthLayout>
-        <AuthCard>
-          <form onSubmit={handleLogin}>
-            <Grid
-              container
-              direction="column"
-              spacing={2}
-              justify="space-evenly"
-              alignItems="center"
-            >
-              <Grid item>
-                <h2>Log in to {Constants.APP_NAME}</h2>
-              </Grid>
-              <Grid item>
-                <TextField
-                  size="small"
-                  variant="outlined"
-                  id="email-basic"
-                  label="Email"
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  size="small"
-                  variant="outlined"
-                  id="password-basic"
-                  label="Password"
-                  name="password"
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                />
-              </Grid>
-              <Grid item>
-                <Button variant="contained" color="primary" type="submit">
-                  Log in
-                </Button>
-              </Grid>
-              or
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="default"
-                  onClick={handleGoogleLogin}
-                >
-                  Log in with Google
-                </Button>
-              </Grid>
-              <Grid item>
-                <Link component={RouterLink} to={Constants.URLS.SIGNUP}>
-                  <h4>Sign up for an account.</h4>
-                </Link>
-              </Grid>
+  return (
+    <AuthLayout>
+      <AuthCard>
+        <form onSubmit={handleLogin}>
+          <Grid
+            container
+            direction="column"
+            spacing={2}
+            justify="space-evenly"
+            alignItems="center"
+          >
+            <Grid item>
+              <h2>Log in to {Constants.APP_NAME}</h2>
             </Grid>
-          </form>
-        </AuthCard>
-      </AuthLayout>
-    );
+            <Grid item>
+              <TextField
+                size="small"
+                variant="outlined"
+                id="email-basic"
+                label="Email"
+                name="email"
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                size="small"
+                variant="outlined"
+                id="password-basic"
+                label="Password"
+                name="password"
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <Button variant="contained" color="primary" type="submit">
+                Log in
+              </Button>
+            </Grid>
+            or
+            <Grid item>
+              <Button
+                variant="contained"
+                color="default"
+                onClick={handleGoogleLogin}
+              >
+                Log in with Google
+              </Button>
+            </Grid>
+            <Grid item>
+              <Link component={RouterLink} to={Constants.URLS.SIGNUP}>
+                <h4>Sign up for an account.</h4>
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </AuthCard>
+    </AuthLayout>
+  );
 };
 
-export default Auth;
+export default Login;
