@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import firebase from '../../utils/firebase';
 import { useSelector } from "react-redux";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import DnsIcon from "@material-ui/icons/Dns";
@@ -71,8 +71,7 @@ const LogoutLink = styled.div`
   }
 `;
 
-interface HeaderProps {
-    history: any,
+interface HeaderProps extends RouteComponentProps {
     background?: boolean
 }
 
@@ -126,7 +125,7 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
               {appName}
             </AppTitle>
           </Grid>
-          <Grid item spacing={3}>
+          <Grid item>
             <Avatar
               alt={displayName}
               src={photoURL}

@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 
+import * as Constants from '../../constants/index';
+import { Board } from '../../models/index.models';
 
 const StyledCard = styled(Card)`
   width: 164px;
@@ -14,20 +16,29 @@ const StyledCard = styled(Card)`
   color: white !important;
 `;
 
-interface BoardProps {
-    name: string
+interface BoardProps extends RouteComponentProps {
+    board: Board
 }
 
-const BoardCard: React.FC<BoardProps> = ({ name }) => {
-    return (
-        <StyledCard>
-            <CardActionArea style={{ height: "100%" }}>
-                <CardContent style={{ position: "relative", top: "0px", left: "0px" }}>
-                    { name }
-                </CardContent>
-            </CardActionArea>
-        </StyledCard>
-    );
+const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
+  const { name, boardId } = board;
+  const handleActionLink = (e: any) => {
+    e.preventDefault();
+    history.push(Constants.buildBoardURI(boardId));
+  };
+  return (
+    <StyledCard>
+      <CardActionArea
+        style={{ height: "100%" }}
+        href={Constants.buildBoardURI(boardId)}
+        onClick={handleActionLink}
+      >
+        <CardContent style={{ position: "relative", top: "0px", left: "0px" }}>
+          {name}
+        </CardContent>
+      </CardActionArea>
+    </StyledCard>
+  );
 };
 
-export default BoardCard;
+export default withRouter(BoardCard);

@@ -23,11 +23,11 @@ const PageWrapper = styled.div.attrs({
 const UserHome: React.FC = () => {
   document.title = "Boards | Taskboard";
 
-  const boardExamples = [
-    { name: "Test" },
-    { name: "Board 2" },
-    { name: "myBoard" },
-    { name: "ABOARD@214" }
+  const boards = [
+    { name: "Test", boardId: "123" },
+    { name: "Board 2", boardId: "345" },
+    { name: "myBoard", boardId: "546" },
+    { name: "ABOARD@214", boardId: "535" }
   ];
 
   return (
@@ -82,7 +82,7 @@ const UserHome: React.FC = () => {
             </h4>
           </Grid>
           <Grid item>
-            <BoardCardList boards={boardExamples} />
+            <BoardCardList boards={boards} />
           </Grid>
         </Grid>
       </Grid>
