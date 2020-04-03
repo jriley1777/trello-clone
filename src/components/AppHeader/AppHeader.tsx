@@ -7,22 +7,21 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import DnsIcon from "@material-ui/icons/Dns";
 import IconButton from "@material-ui/core/IconButton";
-import HomeIcon from "@material-ui/icons/HomeTwoTone";
+import HomeIcon from "@material-ui/icons/HomeOutlined";
 import Card from '@material-ui/core/Card';
 import { clearUser } from '../../features/auth/authSlice';
 
 import * as Constants from "../../constants/index";
 import * as Selectors from "../../selectors/index";
 
-const StyledHeader = styled.div.attrs({
-  className: "header"
-})`
+const StyledHeader = styled.div<{bg: boolean}>`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   color: rgb(250, 251, 252);
-  background: rgb(0, 120, 190);
+  background: ${props =>
+    (props.bg ? `rgba(255,255,255,0.3)` : "rgb(0, 106, 166)")};
 
   & > svg {
     color: #ded;
@@ -73,10 +72,11 @@ const LogoutLink = styled.div`
 `;
 
 interface HeaderProps {
-    history: any
+    history: any,
+    background?: boolean
 }
 
-const AppHeader: React.FC<HeaderProps> = ({ history }) => {
+const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
     const appName = Constants.APP_NAME;
     const [userMenu, showUserMenu] = useState(false);
     const currentUser = useSelector(Selectors.getCurrentUser);
@@ -103,14 +103,14 @@ const AppHeader: React.FC<HeaderProps> = ({ history }) => {
     }
 
     return (
-      <StyledHeader>
+      <StyledHeader bg={background}>
         <Grid
           container
           direction="row"
           justify="space-between"
           alignItems="center"
-          spacing={2}
-          style={{ padding: "2px 20px 2px 20px" }}
+          spacing={6}
+          style={{ padding: "0 20px 0 20px" }}
         >
           <Grid item>
             <StyledIconButton
@@ -131,9 +131,9 @@ const AppHeader: React.FC<HeaderProps> = ({ history }) => {
               alt={displayName}
               src={photoURL}
               style={{ height: "2rem", width: "2rem", cursor: "pointer" }}
-              onClick={ () => showUserMenu(!userMenu) }
+              onClick={() => showUserMenu(!userMenu)}
             />
-            { renderUserMenu(userMenu)}
+            {renderUserMenu(userMenu)}
           </Grid>
         </Grid>
       </StyledHeader>
