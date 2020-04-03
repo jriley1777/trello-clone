@@ -6,6 +6,7 @@ import PersonIcon from "@material-ui/icons/PersonOutline";
 import RecentlyViewedIcon from "@material-ui/icons/AccessTimeOutlined";
 import MenuIcon from "@material-ui/icons/List";
 
+import BoardCardList from '../components/BoardCardList/BoardCardList';
 import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
 
@@ -22,6 +23,13 @@ const PageWrapper = styled.div.attrs({
 const UserHome: React.FC = () => {
   document.title = "Boards | Taskboard";
 
+  const boardExamples = [
+    { name: "Test" },
+    { name: "Board 2" },
+    { name: "myBoard" },
+    { name: "ABOARD@214" }
+  ];
+
   return (
     <PageWrapper>
       <AppHeader />
@@ -29,6 +37,7 @@ const UserHome: React.FC = () => {
         container
         direction="row"
         justify="center"
+        alignItems="flex-start"
         spacing={6}
         style={{ paddingTop: "4.5rem" }}
       >
@@ -73,7 +82,7 @@ const UserHome: React.FC = () => {
             </h4>
           </Grid>
           <Grid item>
-            <Placeholder height={"45vh"} width={"55vw"} />
+            <BoardCardList boards={boardExamples} />
           </Grid>
         </Grid>
       </Grid>
