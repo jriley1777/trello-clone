@@ -17,6 +17,7 @@ interface SignupProps {
 type ErrorsArrayType = {message: string}[];
 
 const Signup: React.FC<SignupProps> = ({ location }) => {
+  document.title = "Sign up to Taskboard";
   const [ email, setEmail ] = useState('');
   const [ name, setName ] = useState('');
   const [ password, setPassword ] = useState('');

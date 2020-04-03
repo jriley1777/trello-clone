@@ -13,6 +13,7 @@ import AuthCard from '../components/AuthCard/AuthCard';
 type ErrorsArrayType = {message: string}[];
 
 const Auth: React.FC = () => {
+  document.title = "Login to Taskboard";
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ errors, setErrors ] = useState<ErrorsArrayType>([]);
