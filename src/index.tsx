@@ -15,6 +15,7 @@ interface RootProps {
   history: any
 }
 const Root: React.FC<RootProps> = ({ history }) => {
+  console.log("Process.ENV ", process.env)
   const dispatch = useDispatch();
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
