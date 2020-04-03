@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, RouteComponentProps } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
@@ -113,84 +113,81 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
-interface SplashTypes {
-    history: any
-}
 
-const Splash: React.FC<SplashTypes> = ({ history }) => {
-    const appName: string = Constants.APP_NAME;
-    const [email, setEmail] = useState('');
+const Splash: React.FC<RouteComponentProps> = ({ history }) => {
+  const appName: string = Constants.APP_NAME;
+  const [email, setEmail] = useState("");
 
-    const handleEmailSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if(email){
-          let uriEmail = `email=${encodeURI(email)}`;
-          let url = `${Constants.URLS.SIGNUP}?${uriEmail}`;
-          history.push(url)
-            console.log(email);
-        }
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      let uriEmail = `email=${encodeURI(email)}`;
+      let url = `${Constants.URLS.SIGNUP}?${uriEmail}`;
+      history.push(url);
+      console.log(email);
     }
-    return (
-      <PageWrapper maxWidth="xl">
-        <Header>
-          <AppTitle to={Constants.URLS.INDEX}>
-            <DnsIcon
-              style={{
-                transform: "rotate(90deg)",
-                width: "auto",
-                height: "2rem",
-                paddingLeft: "5px"
-              }}
-            />
-            {appName}
-          </AppTitle>
-          <section style={{ marginLeft: "auto", marginRight: "20px" }}>
-            <StyledLink to={Constants.URLS.LOGIN}>Login</StyledLink>
-            <Button
-              variant="contained"
-              onClick={() => history.push(Constants.URLS.SIGNUP)}
-            >
-              Sign Up
-            </Button>
-          </section>
-        </Header>
-        <Container maxWidth="xl" style={{paddingBottom:'2rem'}}>
-          <Hero>
-            <div>
-              <h1 style={{ margin: 0 }}>
-                <strong>
-                  {appName} is a simple collaborative tool with flexibility for
-                  all.
-                </strong>
-              </h1>
-              <h5>
-                Individually or as a team, projects large or small, {appName}{" "}
-                will help you stay organized from inception to completion.
-              </h5>
-            </div>
-            <Placeholder />
-          </Hero>
-          <StyledEmailForm onSubmit={handleEmailSubmit}>
-            <StyledTextField
-              id="email-basic"
-              label="Email"
-              name="email"
-              onChange={e => setEmail(e.target.value)}
-              variant="filled"
-            />
-            <StyledSubmitButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-            >
-              Sign up! - It's free
-            </StyledSubmitButton>
-          </StyledEmailForm>
-        </Container>
-        <Footer light/>
-      </PageWrapper>
-    );
+  };
+  return (
+    <PageWrapper maxWidth="xl">
+      <Header>
+        <AppTitle to={Constants.URLS.INDEX}>
+          <DnsIcon
+            style={{
+              transform: "rotate(90deg)",
+              width: "auto",
+              height: "2rem",
+              paddingLeft: "5px"
+            }}
+          />
+          {appName}
+        </AppTitle>
+        <section style={{ marginLeft: "auto", marginRight: "20px" }}>
+          <StyledLink to={Constants.URLS.LOGIN}>Login</StyledLink>
+          <Button
+            variant="contained"
+            onClick={() => history.push(Constants.URLS.SIGNUP)}
+          >
+            Sign Up
+          </Button>
+        </section>
+      </Header>
+      <Container maxWidth="xl" style={{ paddingBottom: "2rem" }}>
+        <Hero>
+          <div>
+            <h1 style={{ margin: 0 }}>
+              <strong>
+                {appName} is a simple collaborative tool with flexibility for
+                all.
+              </strong>
+            </h1>
+            <h5>
+              Individually or as a team, projects large or small, {appName} will
+              help you stay organized from inception to completion.
+            </h5>
+          </div>
+          <Placeholder />
+        </Hero>
+        <StyledEmailForm onSubmit={handleEmailSubmit}>
+          <StyledTextField
+            id="email-basic"
+            label="Email"
+            name="email"
+            onChange={e => setEmail(e.target.value)}
+            variant="filled"
+          />
+          <StyledSubmitButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="large"
+          >
+            Sign up! - It's free
+          </StyledSubmitButton>
+        </StyledEmailForm>
+      </Container>
+      <Footer light />
+    </PageWrapper>
+  );
 };
 
-export default withRouter(Splash);
+export default Splash;

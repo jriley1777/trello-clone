@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import firebase, { usersDb } from '../utils/firebase'
 import * as qs from "query-string";
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import {
+  Link as RouterLink,
+  RouteComponentProps
+} from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
 import Button from '@material-ui/core/Button';
@@ -10,20 +13,15 @@ import AuthLayout from '../components/AuthLayout/AuthLayout';
 import AuthCard from '../components/AuthCard/AuthCard';
 import * as Constants from '../constants/index';
 
-interface SignupProps {
-  location: any ,
-  history: any
-}
-
 type ErrorsArrayType = {message: string}[];
 
-const Signup: React.FC<SignupProps> = ({ location, history }) => {
+const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
   document.title = "Sign up to Taskboard";
-  const [ email, setEmail ] = useState('');
-  const [ name, setName ] = useState('');
-  const [ password, setPassword ] = useState('');
-  const [ loading, setLoading ] = useState(false);
-  const [ errors, setErrors] = useState<ErrorsArrayType>([]);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<ErrorsArrayType>([]);
   const db: any = usersDb();
 
   const handleSignup = (e: React.FormEvent) => {
@@ -41,19 +39,19 @@ const Signup: React.FC<SignupProps> = ({ location, history }) => {
             })
             .then(() => {
               db.saveUser(user).then(() => {
-                console.log("user saved.")
-              })
+                console.log("user saved.");
+              });
             })
             .catch((err: any) => {
-              setErrors([{message: err.message}])
+              setErrors([{ message: err.message }]);
             });
-            history.push(Constants.buildUserURI(user.uid));
-            setLoading(false);
-          })
-          .catch((err: any) => {
-            setErrors([{ message: err.message }]);
-            setLoading(false);
-          });
+          history.push(Constants.buildUserURI(user.uid));
+          setLoading(false);
+        })
+        .catch((err: any) => {
+          setErrors([{ message: err.message }]);
+          setLoading(false);
+        });
     }
   };
 
@@ -63,7 +61,7 @@ const Signup: React.FC<SignupProps> = ({ location, history }) => {
       .getRedirectResult()
       .then(function(result) {
         if (result.credential) {
-          console.log(result)
+          console.log(result);
           // This gives you a Google Access Token. You can use it to access the Google API.
           // var token = result.credential.accessToken;
           // ...
@@ -73,12 +71,12 @@ const Signup: React.FC<SignupProps> = ({ location, history }) => {
         db.saveUser(user).then(() => {
           console.log("user saved.");
         });
-        history.push(Constants.buildUserURI(user.uid))
+        history.push(Constants.buildUserURI(user.uid));
       })
       .catch(err => {
-        setErrors([{ message: err.message }]);;
+        setErrors([{ message: err.message }]);
       });
-  }
+  };
 
   useEffect(() => {
     handleGoogleRedirect();
@@ -87,20 +85,20 @@ const Signup: React.FC<SignupProps> = ({ location, history }) => {
   const handleGoogleLogin = () => {
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
-  }
+  };
 
   const isValidForm = () => {
-   if (email && name && password) {
-     return true;
-   } else {
-     return false;
-   }
-  }
+    if (email && name && password) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   const parseURIParams = () => {
     let params = qs.parseUrl(location.search);
     let parsedEmail = params && params.query.email;
-    if (parsedEmail && typeof parsedEmail === 'string') {
+    if (parsedEmail && typeof parsedEmail === "string") {
       setEmail(parsedEmail);
     }
   };
@@ -174,10 +172,11 @@ const Signup: React.FC<SignupProps> = ({ location, history }) => {
             </Grid>
             or
             <Grid item>
-              <Button 
-                onClick={ handleGoogleLogin }
-                variant="contained" 
-                color="default">
+              <Button
+                onClick={handleGoogleLogin}
+                variant="contained"
+                color="default"
+              >
                 Continue with Google
               </Button>
             </Grid>
@@ -193,4 +192,4 @@ const Signup: React.FC<SignupProps> = ({ location, history }) => {
   );
 };
 
-export default withRouter(Signup);
+export default Signup;
