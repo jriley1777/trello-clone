@@ -1,27 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import firebase from '../utils/firebase';
+import React from 'react';
+import styled from 'styled-components';
+import AppHeader from '../components/AppHeader/AppHeader';
 
-const UserHome = () => {
-    document.title = "Boards | Taskboard";
-    const { userId } = useParams();
-    const [ user, setUser ] = useState({name: '', photoURL: ''});
-    const usersRef = firebase.database().ref('users');
+const PageWrapper = styled.div.attrs({
+  className: "PageWrapper"
+})`
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: rgb(250,251,252);
+`;
 
-    useEffect(() => {
-        if(userId){
-           usersRef.child(userId).on('value', snap => {
-               setUser(snap.val())
-           });
-        }
-    }, []);
+const UserHome: React.FC = () => {
+  document.title = "Boards | Taskboard";
 
-    return (
-        <div>
-            <h1>User Home for: &nbsp;&nbsp;{user.name}</h1>
-            <img src={user.photoURL} />
-        </div>
-    )
+  return (
+    <PageWrapper>
+      <AppHeader />
+    </PageWrapper>
+  );
 };
 
 export default UserHome;
