@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, withRouter } from "react-router-dom";
 import firebase from './utils/firebase';
@@ -16,8 +16,9 @@ interface RootProps {
 }
 const Root: React.FC<RootProps> = ({ history }) => {
   document.title = "Taskboard";
-  console.log("Process.ENV ", process.env)
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -33,13 +34,15 @@ const Root: React.FC<RootProps> = ({ history }) => {
           }
         }));
         history.push(Constants.buildUserURI(user.uid));
+        setLoading(false);
       } else {
         dispatch(clearUser());
+        setLoading(false);
       }
     });
   }, [history, dispatch]);
 
-  return <App />
+  return !loading ? <App /> : null;
 };
 
 const RootWithAuth = withRouter(Root);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import firebase from '../utils/firebase';
+import firebase, { usersDb } from '../utils/firebase';
 import { Link as RouterLink } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
@@ -12,12 +12,16 @@ import AuthCard from '../components/AuthCard/AuthCard';
 
 type ErrorsArrayType = {message: string}[];
 
-const Auth: React.FC = () => {
+interface AuthProps {
+  history: any
+}
+
+const Auth: React.FC<AuthProps> = ({ history }) => {
   document.title = "Login to Taskboard";
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ errors, setErrors ] = useState<ErrorsArrayType>([]);
-  const usersRef = firebase.database().ref("users");
+  const db: any = usersDb();
 
   const isValidForm = () => email && password;
 
@@ -27,17 +31,10 @@ const Auth: React.FC = () => {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
+        .then(user => history.push(Constants.buildUserURI(user.user!.uid)))
         .catch(err => setErrors([{ message: err.message }]));
     }
   }
-
-  const saveUser = (user: any) => {
-    return usersRef.child(user.uid).set({
-      name: user.displayName,
-      photoURL: user.photoURL || "",
-      email: user.email
-    });
-  };
 
   const handleGoogleRedirect = () => {
     firebase
@@ -52,9 +49,10 @@ const Auth: React.FC = () => {
         }
         // The signed-in user info.
         var user: any = result.user;
-        saveUser(user).then(() => {
+        db.saveUser(user).then(() => {
           console.log("user saved.");
         });
+        history.push(Constants.buildUserURI(user.uid));
       })
       .catch(err => {
         setErrors([{ message: err.message }]);
