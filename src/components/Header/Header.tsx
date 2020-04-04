@@ -39,12 +39,9 @@ const Header: React.FC = () => {
           style={{ padding: "20px" }}
         >
           <Grid item>
-            <AppTitle style={{fontSize:'1.5rem'}}/>
+            <AppTitle light style={{fontSize:'1.5rem'}}/>
           </Grid>
-          <Grid 
-            item
-            direction="row"
-            alignItems="center">
+          <Grid item>
             <StyledLink to={Constants.URLS.LOGIN}>Login</StyledLink>
             <Button
               variant="contained"

@@ -9,11 +9,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 import * as Constants from '../../constants/index';
 import { Board } from '../../models/index.models';
 
-const StyledCard = styled(Card)`
+const StyledCard = styled(Card)<{bg: any}>`
   width: 164px;
   height: 88px;
   font-size: 1rem;
-  background: rgb(0, 106, 166) !important;
+  background: ${props => props.bg.color} !important;
   color: white !important;
 `;
 
@@ -35,14 +35,13 @@ const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
   };
 
   const renderMedia = () => {
-    console.log(board, board.hasOwnProperty("media"));
-    return board.hasOwnProperty("media") ? (
-      <StyledCardMedia image={board.media!.url} title={board.media!.alt} />
+    return board.bg.media!.urls ? (
+      <StyledCardMedia image={board.bg.media!.urls.small} title={board.bg.media!.alt_description} />
     ) : null;
   }
   
   return (
-    <StyledCard>
+    <StyledCard bg={board.bg}>
       <CardActionArea
         style={{ height: "100%" }}
         href={Constants.buildBoardURI(boardId)}

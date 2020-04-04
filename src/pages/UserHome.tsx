@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
@@ -24,6 +24,7 @@ const PageWrapper = styled.div.attrs({
 const UserHome: React.FC = () => {
   document.title = "Boards | Taskboard";
   const boards = useSelector(Selectors.getBoards);
+  
   return (
     <PageWrapper>
       <AppHeader />

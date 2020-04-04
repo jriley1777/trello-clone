@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import DnsIcon from '@material-ui/icons/Dns';
 import * as Constants from '../../constants/index';
 
-const StyledAppTitle = styled(Link)<{light: boolean}>`
+const StyledAppTitle = styled(Link)<{light: number}>`
   text-decoration: none;
   margin: 0;
   color: ${props => props.light ? 'rgba(255, 255, 255, 0.9)' : 'rgb(0, 135, 210, 0.9)' };
@@ -27,11 +27,11 @@ interface AppTitleProps {
     style?: React.CSSProperties
 }
 
-const AppTitle: React.FC<AppTitleProps> = ({ to, light=true, style }) => {
+const AppTitle: React.FC<AppTitleProps> = ({ to, light, style }) => {
     const appName = Constants.APP_NAME;
     const link = to || Constants.URLS.INDEX;
     return (
-      <StyledAppTitle to={link} light={light} style={style}>
+      <StyledAppTitle to={link} light={light ? 1 : 0} style={style}>
         <DnsIcon />
         {appName}
       </StyledAppTitle>

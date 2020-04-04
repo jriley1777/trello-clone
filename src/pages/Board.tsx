@@ -2,11 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import firebase from '../utils/firebase';
 
 import Grid from '@material-ui/core/Grid';
 import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
 import BoardHeader from '../components/BoardHeader/BoardHeader';
+
 import * as Selectors from '../selectors/index';
 
 const PageWrapper = styled.div<{ bg: any }>`
@@ -14,8 +16,8 @@ const PageWrapper = styled.div<{ bg: any }>`
   height: 100vh;
   overflow: hidden;
   background: ${props =>
-    props.bg ? `url(${props.bg.url})` : `rgb(0, 106, 166)`};
-  background-position: top;
+  props.bg.media.urls ? `url(${props.bg.media.urls.regular})` : `${props.bg.color}`};
+  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 `;
@@ -27,8 +29,8 @@ const Board = () => {
     const boards = useSelector(Selectors.getBoards);
     const board = boards.find(x => x.boardId === boardId);
     return (
-      <PageWrapper bg={board!.media}>
-        <AppHeader background={!!board!.media} />
+      <PageWrapper bg={board!.bg}>
+        <AppHeader background={!!board!.bg.media} />
         <BoardHeader board={board!} />
         <Grid
           container
