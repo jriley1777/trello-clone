@@ -131,6 +131,7 @@ const Splash: React.FC<RouteComponentProps> = ({ history }) => {
             name="email"
             onChange={e => setEmail(e.target.value)}
             variant="filled"
+            size="small"
           />
           <StyledSubmitButton
             type="submit"

@@ -16,20 +16,22 @@ const StyledAppTitle = styled(Link)<{light: boolean}>`
   & > svg {
     transform: rotate(90deg);
     width: auto;
-    padding-left: 6px;
+    padding-left: 5px;
+    font-size: inherit;
   }
 `;
 
 interface AppTitleProps {
     light?: boolean,
-    to?: string
+    to?: string,
+    style?: React.CSSProperties
 }
 
-const AppTitle: React.FC<AppTitleProps> = ({ to, light=true }) => {
+const AppTitle: React.FC<AppTitleProps> = ({ to, light=true, style }) => {
     const appName = Constants.APP_NAME;
     const link = to || Constants.URLS.INDEX;
     return (
-      <StyledAppTitle to={link} light={light}>
+      <StyledAppTitle to={link} light={light} style={style}>
         <DnsIcon />
         {appName}
       </StyledAppTitle>

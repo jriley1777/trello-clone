@@ -39,7 +39,7 @@ const Header: React.FC = () => {
           style={{ padding: "20px" }}
         >
           <Grid item>
-            <AppTitle />
+            <AppTitle style={{fontSize:'1.5rem'}}/>
           </Grid>
           <Grid 
             item

@@ -21,7 +21,7 @@ const PageWrapper = styled(Container).attrs({
 const AuthLayout: React.FC = ({ children }) => {
     return (
       <PageWrapper>
-        <AppTitle light={false}/>
+        <AppTitle light={false} style={{fontSize:'2rem'}}/>
         <Grid
           style={{ marginTop: "2rem" }}
           container
