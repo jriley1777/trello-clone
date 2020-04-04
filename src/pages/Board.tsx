@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import AppHeader from '../components/AppHeader/AppHeader';
+import BoardHeader from '../components/BoardHeader/BoardHeader';
 import * as Selectors from '../selectors/index';
 
 const PageWrapper = styled.div<{ bg: any }>`
@@ -25,6 +26,7 @@ const Board = () => {
     return (
         <PageWrapper bg={board!.media}>
             <AppHeader background={!!board!.media}/>
+            <BoardHeader board={ board! } />
         </PageWrapper>
     )
 };
