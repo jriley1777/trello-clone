@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
-import DnsIcon from "@material-ui/icons/Dns";
 import Header from '../components/Header/Header';
 import Placeholder from '../components/Placeholder/Placeholder';
 import Footer from '../components/Footer/Footer';
@@ -26,17 +25,6 @@ const PageWrapper = styled(Container).attrs({
   );
 `;
 
-const AppTitle = styled(Link).attrs({
-  className: "appTitle"
-})`
-  text-decoration: none;
-  margin: 0;
-  padding-left: 20px;
-  color: white;
-  font-size: 2rem;
-  font-family: Pacifico;
-`;
-
 const Hero = styled.section.attrs({
   className: "hero"
 })`
@@ -52,7 +40,7 @@ const Hero = styled.section.attrs({
   justify-content: space-between;
 
   @media (min-width: 768px) {
-    padding: 10rem 5rem 2rem 5rem;
+    padding: 9rem 5rem 2rem 5rem;
     line-height: 1.75;
     display: flex;
     flex-direction: row;
@@ -61,16 +49,6 @@ const Hero = styled.section.attrs({
     > * {
       width: 48%;
     }
-  }
-`;
-
-const StyledLink = styled(Link)`
-  color: white;
-  text-decoration: none;
-  padding: 20px;
-
-  &:hover {
-      text-decoration: underline;
   }
 `;
 
@@ -129,28 +107,7 @@ const Splash: React.FC<RouteComponentProps> = ({ history }) => {
   };
   return (
     <PageWrapper maxWidth="xl">
-      <Header>
-        <AppTitle to={Constants.URLS.INDEX}>
-          <DnsIcon
-            style={{
-              transform: "rotate(90deg)",
-              width: "auto",
-              height: "2rem",
-              paddingLeft: "5px"
-            }}
-          />
-          {appName}
-        </AppTitle>
-        <section style={{ marginLeft: "auto", marginRight: "20px" }}>
-          <StyledLink to={Constants.URLS.LOGIN}>Login</StyledLink>
-          <Button
-            variant="contained"
-            onClick={() => history.push(Constants.URLS.SIGNUP)}
-          >
-            Sign Up
-          </Button>
-        </section>
-      </Header>
+      <Header />
       <Container maxWidth="xl" style={{ paddingBottom: "2rem" }}>
         <Hero>
           <div>
@@ -174,6 +131,7 @@ const Splash: React.FC<RouteComponentProps> = ({ history }) => {
             name="email"
             onChange={e => setEmail(e.target.value)}
             variant="filled"
+            size="small"
           />
           <StyledSubmitButton
             type="submit"
