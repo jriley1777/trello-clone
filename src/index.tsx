@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, withRouter } from "react-router-dom";
+import { BrowserRouter as Router, withRouter,  } from "react-router-dom";
 import firebase from './utils/firebase';
 import './index.css';
 import App from './app/App';
@@ -33,7 +33,9 @@ const Root: React.FC<RootProps> = ({ history }) => {
             uid: user.uid
           }
         }));
-        history.push(Constants.buildUserURI(user.uid));
+        if(history.location.pathname === Constants.URLS.INDEX) {
+          history.push(Constants.buildUserURI(user.uid));
+        }
         setLoading(false);
       } else {
         dispatch(clearUser());
