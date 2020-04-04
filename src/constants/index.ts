@@ -7,7 +7,7 @@ import UserHome from '../pages/UserHome';
 import MissingPage from '../pages/Missing';
 
 export const APP_NAME="Taskboard";
-export const DEFAULT_BOARD_COLOR = "#006AA6";
+export const DEFAULT_BOARD_COLOR: string = "#006AA6";
 
 export const URLS = {
     INDEX: '/',
