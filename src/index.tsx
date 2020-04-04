@@ -7,7 +7,7 @@ import App from './app/App';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { setUser, clearUser } from './features/auth/authSlice';
-import { setBoards, clearBoards } from './features/boardsSlice';
+import { setBoards, clearBoards } from './features/boards/boardsSlice';
 import * as Constants from './constants/index';
 import { Board } from './models/index.models'
 import * as Selectors from './selectors/index';

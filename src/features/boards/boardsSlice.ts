@@ -1,25 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Board } from '../models/index.models';
-
+import { Board } from '../../models/index.models';
 
 const initialBoards: Board[] = [];
 
 const boards = createSlice({
   name: "boards",
-  initialState: {
-    boards: initialBoards
-  },
+  initialState: initialBoards,
   reducers: {
     setBoards(state, action) {
       const boards: Board[] = action.payload;
-      return (state = {
-        boards
-      });
+      return boards;
     },
     clearBoards(state){
-      return (state = { 
-        boards: initialBoards 
-      });
+      return initialBoards;
     }
   }
 });
