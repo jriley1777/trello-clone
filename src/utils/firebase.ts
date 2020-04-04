@@ -33,4 +33,5 @@ import "firebase/database";
     }
   }
 
+
   export default firebase;

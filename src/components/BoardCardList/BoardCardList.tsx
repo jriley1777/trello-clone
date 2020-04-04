@@ -2,6 +2,7 @@ import React from 'react';
 
 import Grid from "@material-ui/core/Grid";
 import BoardCard from '../BoardCard/BoardCard';
+import CreateBoardCard from '../CreateCard/CreateCard';
 
 import { Board } from '../../models/index.models';
 
@@ -13,7 +14,6 @@ const BoardCardList:React.FC<BCListProps> = ({ boards }) => {
         <Grid container direction="row" spacing={1}>
             {
                 boards.map(board => {
-                    console.log(board);
                     return (
                       <Grid item key={board.name}>
                         <BoardCard board={ board } />
@@ -21,6 +21,9 @@ const BoardCardList:React.FC<BCListProps> = ({ boards }) => {
                     );
                 })
             }
+            <Grid item>
+                <CreateBoardCard />
+            </Grid>
         </Grid>
     )
 };

@@ -1,8 +1,8 @@
 export interface Board {
-    name: string,
-    boardId: string,
-    media?: {
-        url: string,
-        alt: string
-    }
+  name: string;
+  boardId: string;
+  bg: {
+    media: any;
+    color: string;
+  };
 }
