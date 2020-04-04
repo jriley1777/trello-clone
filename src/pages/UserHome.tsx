@@ -24,7 +24,14 @@ const UserHome: React.FC = () => {
   document.title = "Boards | Taskboard";
 
   const boards = [
-    { name: "Test", boardId: "123" },
+    {
+      name: "Test",
+      boardId: "123",
+      media: {
+        url: "https://images.unsplash.com/photo-1443527216320-7e744084f5a7?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjEyNDgxN30",
+        alt: "sea-waves"
+      }
+    },
     { name: "Board 2", boardId: "345" },
     { name: "myBoard", boardId: "546" },
     { name: "ABOARD@214", boardId: "535" }
