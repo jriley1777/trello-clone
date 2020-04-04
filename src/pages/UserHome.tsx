@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import PersonIcon from "@material-ui/icons/PersonOutline";
 import RecentlyViewedIcon from "@material-ui/icons/AccessTimeOutlined";
@@ -9,6 +9,7 @@ import MenuIcon from "@material-ui/icons/List";
 import BoardCardList from '../components/BoardCardList/BoardCardList';
 import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
+import * as Selectors from '../selectors/index';
 
 const PageWrapper = styled.div.attrs({
   className: "PageWrapper"
@@ -22,21 +23,7 @@ const PageWrapper = styled.div.attrs({
 
 const UserHome: React.FC = () => {
   document.title = "Boards | Taskboard";
-
-  const boards = [
-    {
-      name: "Test",
-      boardId: "123",
-      media: {
-        url: "https://images.unsplash.com/photo-1443527216320-7e744084f5a7?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjEyNDgxN30",
-        alt: "sea-waves"
-      }
-    },
-    { name: "Board 2", boardId: "345" },
-    { name: "myBoard", boardId: "546" },
-    { name: "ABOARD@214", boardId: "535" }
-  ];
-
+  const boards = useSelector(Selectors.getBoards);
   return (
     <PageWrapper>
       <AppHeader />

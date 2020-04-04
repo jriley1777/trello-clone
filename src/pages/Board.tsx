@@ -1,22 +1,30 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import AppHeader from '../components/AppHeader/AppHeader';
+import * as Selectors from '../selectors/index';
 
-const PageWrapper = styled.div.attrs({
-  className: "PageWrapper"
-})`
+const PageWrapper = styled.div<{ bg: any }>`
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: rgb(250, 251, 252);
+  background: ${props =>
+    props.bg ? `url(${props.bg.url})` : `rgb(250, 251, 252)`};
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
 `;
 
 
 const Board = () => {
-    document.title = "BoardName | Taskboard";
+    document.title = "BoardName | Taskboagrd";
+    const { boardId } = useParams();
+    const boards = useSelector(Selectors.getBoards);
+    const board = boards.find(x => x.boardId === boardId);
     return (
-        <PageWrapper>
-            <AppHeader />
+        <PageWrapper bg={board!.media}>
+            <AppHeader background={!!board!.media}/>
         </PageWrapper>
     )
 };
