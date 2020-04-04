@@ -23,14 +23,14 @@ const CreateCard = () => {
     const boardsRef = firebase.database().ref("boards");
     const handleCreateBoard = async () => {
         let defaultBoard = {
-            name: 'Board ' + Math.floor(Math.random()*100),
+            name: 'Board ' + Math.floor(Math.random()*1000),
             bg: {
                 color: DEFAULT_BOARD_COLOR,
                 media: {}
             }
         };
         await unsplash.photos
-            .getRandomPhoto({query: 'tropical'})
+            .getRandomPhoto({ query: 'nature', orientation: 'landscape'})
             .then(toJson)
             .then(json => defaultBoard.bg.media = json)
             .catch(err => console.log(err));
