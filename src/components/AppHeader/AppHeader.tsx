@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import firebase from '../../utils/firebase';
 import { useSelector } from "react-redux";
-import { Link, withRouter, RouteComponentProps } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
-import DnsIcon from "@material-ui/icons/Dns";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import Card from '@material-ui/core/Card';
 import { clearUser } from '../../features/auth/authSlice';
-
+import AppTitle from '../AppTitle/AppTitle';
 import * as Constants from "../../constants/index";
 import * as Selectors from "../../selectors/index";
 
@@ -25,24 +24,6 @@ const StyledHeader = styled.div<{bg: boolean}>`
 
   & > svg {
     color: #ded;
-  }
-`;
-
-const AppTitle = styled(Link).attrs({
-  className: "appTitle"
-})`
-  text-decoration: none;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 1.25rem;
-  font-family: Pacifico;
-  &:hover {
-    color: #fff;
-  }
-  & > svg {
-    transform: rotate(90deg);
-    width: auto;
-    padding-left: 6px;
   }
 `;
 
@@ -76,7 +57,6 @@ interface HeaderProps extends RouteComponentProps {
 }
 
 const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
-    const appName = Constants.APP_NAME;
     const [userMenu, showUserMenu] = useState(false);
     const currentUser = useSelector(Selectors.getCurrentUser);
     const { displayName, photoURL, uid } = currentUser;
@@ -120,10 +100,7 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
             </StyledIconButton>
           </Grid>
           <Grid item>
-            <AppTitle to={Constants.buildUserURI(uid)}>
-              <DnsIcon />
-              {appName}
-            </AppTitle>
+            <AppTitle to={Constants.buildUserURI(uid)} />
           </Grid>
           <Grid item>
             <Avatar

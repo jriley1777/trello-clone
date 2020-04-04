@@ -1,0 +1,39 @@
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import DnsIcon from '@material-ui/icons/Dns';
+import * as Constants from '../../constants/index';
+
+const StyledAppTitle = styled(Link)<{light: boolean}>`
+  text-decoration: none;
+  margin: 0;
+  color: ${props => props.light ? 'rgba(255, 255, 255, 0.9)' : 'rgb(0, 135, 210, 0.9)' };
+  font-size: 1.25rem;
+  font-family: Pacifico;
+  &:hover {
+    color: ${props => props.light ? 'rgba(255, 255, 255, 1)' : 'rgb(0, 135, 210, 1)' };
+  }
+  & > svg {
+    transform: rotate(90deg);
+    width: auto;
+    padding-left: 6px;
+  }
+`;
+
+interface AppTitleProps {
+    light?: boolean,
+    to?: string
+}
+
+const AppTitle: React.FC<AppTitleProps> = ({ to, light=true }) => {
+    const appName = Constants.APP_NAME;
+    const link = to || Constants.URLS.INDEX;
+    return (
+      <StyledAppTitle to={link} light={light}>
+        <DnsIcon />
+        {appName}
+      </StyledAppTitle>
+    );
+};
+
+export default AppTitle;
