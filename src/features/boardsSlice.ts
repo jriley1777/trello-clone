@@ -15,10 +15,15 @@ const boards = createSlice({
       return (state = {
         boards
       });
+    },
+    clearBoards(state){
+      return (state = { 
+        boards: initialBoards 
+      });
     }
   }
 });
 
-export const { setBoards } = boards.actions;
+export const { setBoards, clearBoards } = boards.actions;
 
 export default boards.reducer;

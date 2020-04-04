@@ -4,12 +4,13 @@ import { BrowserRouter as Router, withRouter,  } from "react-router-dom";
 import firebase from './utils/firebase';
 import './index.css';
 import App from './app/App';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { setUser, clearUser } from './features/auth/authSlice';
-import { setBoards } from './features/boardsSlice';
+import { setBoards, clearBoards } from './features/boardsSlice';
 import * as Constants from './constants/index';
 import { Board } from './models/index.models'
+import * as Selectors from './selectors/index';
 
 import store from './utils/redux';
 
@@ -21,6 +22,8 @@ const Root: React.FC<RootProps> = ({ history }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const boardsRef = firebase.database().ref('boards');
+  const isAuthenticated = useSelector(Selectors.isAuthenticated);
+  const currentUser = useSelector(Selectors.getCurrentUser);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -36,32 +39,40 @@ const Root: React.FC<RootProps> = ({ history }) => {
             uid: user.uid
           }
         }));
-        if(history.location.pathname === Constants.URLS.INDEX) {
+        if ([Constants.URLS.INDEX, Constants.URLS.LOGIN].includes(history.location.pathname)) {
           history.push(Constants.buildUserURI(user.uid));
         }
-        boardsRef.child(user.uid).on('value', snap => {
-          const loadedBoards: Board[] = [];
-          if (snap.val()) {
-            Object.entries(snap.val()).forEach(([key, value]: [string, any]) => {
-              loadedBoards.push({
-                boardId: key,
-                name: value.name,
-                bg: {
-                  color: value.bg.color,
-                  media: value.bg.media || {}
-                }
-              })
-            });
-            dispatch(setBoards(loadedBoards));
-          }
-          setLoading(false);
-        });
+        setLoading(false);
       } else {
+        dispatch(clearBoards());
         dispatch(clearUser());
         setLoading(false);
       }
     });
   }, [history, dispatch]);
+
+  useEffect(() => {
+    if (isAuthenticated){
+      setLoading(true);
+      boardsRef.child(currentUser.uid).on('value', snap => {
+        const loadedBoards: Board[] = [];
+        if (snap.val()) {
+          Object.entries(snap.val()).forEach(([key, value]: [string, any]) => {
+            loadedBoards.push({
+              boardId: key,
+              name: value.name,
+              bg: {
+                color: value.bg.color,
+                media: value.bg.media || {}
+              }
+            })
+          });
+          dispatch(setBoards(loadedBoards));
+        }
+        setLoading(false);
+      });
+    }
+  }, [isAuthenticated])
 
   return !loading ? <App /> : null;
 };

@@ -100,7 +100,7 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
             </StyledIconButton>
           </Grid>
           <Grid item>
-            <AppTitle to={Constants.buildUserURI(uid)} />
+            <AppTitle light to={Constants.buildUserURI(uid)} />
           </Grid>
           <Grid item>
             <Avatar
