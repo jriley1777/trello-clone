@@ -7,7 +7,9 @@ import App from './app/App';
 import { Provider, useDispatch } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { setUser, clearUser } from './features/auth/authSlice';
+import { setBoards } from './features/boardsSlice';
 import * as Constants from './constants/index';
+import { Board } from './models/index.models'
 
 import store from './utils/redux';
 
@@ -18,6 +20,7 @@ const Root: React.FC<RootProps> = ({ history }) => {
   document.title = "Taskboard";
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
+  const boardsRef = firebase.database().ref('boards');
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -36,7 +39,23 @@ const Root: React.FC<RootProps> = ({ history }) => {
         if(history.location.pathname === Constants.URLS.INDEX) {
           history.push(Constants.buildUserURI(user.uid));
         }
-        setLoading(false);
+        boardsRef.child(user.uid).on('value', snap => {
+          const loadedBoards: Board[] = [];
+          if (snap.val()) {
+            Object.entries(snap.val()).forEach(([key, value]: [string, any]) => {
+              loadedBoards.push({
+                boardId: key,
+                name: value.name,
+                bg: {
+                  color: value.bg.color,
+                  media: value.bg.media || {}
+                }
+              })
+            });
+            dispatch(setBoards(loadedBoards));
+          }
+          setLoading(false);
+        });
       } else {
         dispatch(clearUser());
         setLoading(false);

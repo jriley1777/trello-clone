@@ -35,8 +35,8 @@ const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
   };
 
   const renderMedia = () => {
-    return board.bg.media!.url ? (
-      <StyledCardMedia image={board.bg.media!.url} title={board.bg.media!.alt} />
+    return board.bg.media!.urls ? (
+      <StyledCardMedia image={board.bg.media!.urls.small} title={board.bg.media!.alt_description} />
     ) : null;
   }
   

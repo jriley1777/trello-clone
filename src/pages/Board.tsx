@@ -16,8 +16,8 @@ const PageWrapper = styled.div<{ bg: any }>`
   height: 100vh;
   overflow: hidden;
   background: ${props =>
-    props.bg.media.url ? `url(${props.bg.media.url})` : `${props.bg.color}`};
-  background-position: top;
+  props.bg.media.urls ? `url(${props.bg.media.urls.regular})` : `${props.bg.color}`};
+  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 `;
