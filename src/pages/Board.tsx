@@ -2,6 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+
+import Grid from '@material-ui/core/Grid';
+import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
 import BoardHeader from '../components/BoardHeader/BoardHeader';
 import * as Selectors from '../selectors/index';
@@ -11,7 +14,7 @@ const PageWrapper = styled.div<{ bg: any }>`
   height: 100vh;
   overflow: hidden;
   background: ${props =>
-    props.bg ? `url(${props.bg.url})` : `rgb(250, 251, 252)`};
+    props.bg ? `url(${props.bg.url})` : `rgb(0, 106, 166)`};
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
@@ -24,11 +27,32 @@ const Board = () => {
     const boards = useSelector(Selectors.getBoards);
     const board = boards.find(x => x.boardId === boardId);
     return (
-        <PageWrapper bg={board!.media}>
-            <AppHeader background={!!board!.media}/>
-            <BoardHeader board={ board! } />
-        </PageWrapper>
-    )
+      <PageWrapper bg={board!.media}>
+        <AppHeader background={!!board!.media} />
+        <BoardHeader board={board!} />
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+          spacing={3}
+          style={{ padding: "3rem 20px 0 20px" }}
+        >
+          <Grid item xs={2}>
+            <Placeholder height={"40vh"} />
+          </Grid>
+          <Grid item xs={2}>
+            <Placeholder height={"40vh"} />
+          </Grid>
+          <Grid item xs={2}>
+            <Placeholder height={"40vh"} />
+          </Grid>
+          <Grid item xs={2}>
+            <Placeholder height={"40vh"} />
+          </Grid>
+        </Grid>
+      </PageWrapper>
+    );
 };
 
 export default Board;
