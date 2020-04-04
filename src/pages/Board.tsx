@@ -14,7 +14,7 @@ const PageWrapper = styled.div<{ bg: any }>`
   height: 100vh;
   overflow: hidden;
   background: ${props =>
-    props.bg ? `url(${props.bg.url})` : `rgb(0, 106, 166)`};
+    props.bg.media.url ? `url(${props.bg.media.url})` : `${props.bg.color}`};
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
@@ -27,8 +27,8 @@ const Board = () => {
     const boards = useSelector(Selectors.getBoards);
     const board = boards.find(x => x.boardId === boardId);
     return (
-      <PageWrapper bg={board!.media}>
-        <AppHeader background={!!board!.media} />
+      <PageWrapper bg={board!.bg}>
+        <AppHeader background={!!board!.bg.media} />
         <BoardHeader board={board!} />
         <Grid
           container
