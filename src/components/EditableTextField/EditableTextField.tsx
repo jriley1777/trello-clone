@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import InputBase from '@material-ui/core/InputBase';
 
 const StyledInputBase = styled(InputBase)`
-    color: inherit !important;
     font-family: inherit !important;
     font-size: inherit !important;
     font-weight: inherit !important;
@@ -11,9 +10,19 @@ const StyledInputBase = styled(InputBase)`
     max-width: inherit !imporant;
     width: inherit !important;
     height: inherit !important;
-    background: rgba(0,0,0,0.2);
+    padding-left: 5px !important;
+    background: white;
+    color: black;
     border-radius: 5px;
 `
+
+const StyledSpan = styled.span`
+    padding: 5px;
+    &:hover {
+      cursor: pointer;
+      background: rgba(0,0,0,0.2)
+    } 
+`;
 
 interface ETProps {
     name: string,
@@ -43,7 +52,11 @@ const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style }) 
             style={style}
             />
     ) : (
-        <span onClick={() => setEditing(!editing)} style={style}>{ value }</span>
+        <StyledSpan 
+            onClick={() => setEditing(!editing)} 
+            style={style}>
+            { value }
+        </StyledSpan>
     )
 };
 
