@@ -63,12 +63,8 @@ const Root: React.FC<RootProps> = ({ history }) => {
             if(!value.deleted){ 
               loadedBoards.push({
                 boardId: key,
-                name: value.name,
                 deleted: value.deleted || false,
-                bg: {
-                  color: value.bg.color,
-                  media: value.bg.media || {}
-                }
+                ...value
               })
             }
           });
