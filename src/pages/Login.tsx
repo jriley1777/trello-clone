@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styled from 'styled-components';
 import firebase, { usersDb } from '../utils/firebase';
 import { Link as RouterLink, RouteComponentProps } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
@@ -11,6 +12,12 @@ import AuthLayout from '../components/AuthLayout/AuthLayout';
 import AuthCard from '../components/AuthCard/AuthCard';
 
 type ErrorsArrayType = {message: string}[];
+
+const StyledGridContainer = styled(Grid)`
+  & > * {
+    width: 60% !important;
+  }
+`;
 
 const Login: React.FC<RouteComponentProps> = ({ history }) => {
   document.title = "Login to Taskboard";
@@ -68,7 +75,7 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
     <AuthLayout>
       <AuthCard>
         <form onSubmit={handleLogin}>
-          <Grid
+          <StyledGridContainer
             container
             direction="column"
             spacing={2}
@@ -80,6 +87,7 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
             </Grid>
             <Grid item>
               <TextField
+                fullWidth
                 size="small"
                 variant="outlined"
                 id="email-basic"
@@ -92,6 +100,7 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
             </Grid>
             <Grid item>
               <TextField
+                fullWidth
                 size="small"
                 variant="outlined"
                 id="password-basic"
@@ -103,13 +112,18 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
               />
             </Grid>
             <Grid item>
-              <Button variant="contained" color="primary" type="submit">
+              <Button
+                fullWidth
+                variant="contained" 
+                color="primary" 
+                type="submit">
                 Log in
               </Button>
             </Grid>
             or
             <Grid item>
               <Button
+                fullWidth
                 variant="contained"
                 color="default"
                 onClick={handleGoogleLogin}
@@ -122,7 +136,7 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
                 <h4>Sign up for an account.</h4>
               </Link>
             </Grid>
-          </Grid>
+          </StyledGridContainer>
         </form>
       </AuthCard>
     </AuthLayout>

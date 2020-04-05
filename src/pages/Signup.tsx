@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import styled from 'styled-components';
 import firebase, { usersDb } from '../utils/firebase'
 import * as qs from "query-string";
 import {
@@ -14,6 +15,12 @@ import AuthCard from '../components/AuthCard/AuthCard';
 import * as Constants from '../constants/index';
 
 type ErrorsArrayType = {message: string}[];
+
+const StyledGridContainer = styled(Grid)`
+  & > * {
+    width: 60% !important;
+  }
+`;
 
 const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
   document.title = "Sign up to Taskboard";
@@ -111,7 +118,7 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
     <AuthLayout>
       <AuthCard>
         <form onSubmit={handleSignup}>
-          <Grid
+          <StyledGridContainer
             container
             direction="column"
             spacing={2}
@@ -123,6 +130,7 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
             </Grid>
             <Grid item>
               <TextField
+                fullWidth
                 size="small"
                 variant="outlined"
                 id="email-basic"
@@ -135,6 +143,7 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
             </Grid>
             <Grid item>
               <TextField
+                fullWidth
                 size="small"
                 variant="outlined"
                 id="fullname-basic"
@@ -147,6 +156,7 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
             </Grid>
             <Grid item>
               <TextField
+                fullWidth
                 size="small"
                 variant="outlined"
                 id="password-basic"
@@ -162,6 +172,7 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
             </Grid>
             <Grid item>
               <Button
+                fullWidth
                 type="submit"
                 variant="contained"
                 color="primary"
@@ -173,6 +184,7 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
             or
             <Grid item>
               <Button
+                fullWidth
                 onClick={handleGoogleLogin}
                 variant="contained"
                 color="default"
@@ -185,7 +197,7 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
                 <h4>Already have an account?</h4>
               </Link>
             </Grid>
-          </Grid>
+          </StyledGridContainer>
         </form>
       </AuthCard>
     </AuthLayout>
