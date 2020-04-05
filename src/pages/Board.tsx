@@ -24,7 +24,7 @@ const PageWrapper = styled.div<{ bg: any }>`
 
 
 const Board = () => {
-    document.title = "BoardName | Taskboagrd";
+    document.title = "BoardName | Taskboard";
     const { boardId } = useParams();
     const boards = useSelector(Selectors.getBoards);
     const board = boards.find(x => x.boardId === boardId);
