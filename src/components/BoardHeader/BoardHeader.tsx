@@ -5,11 +5,8 @@ import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import StarIcon from '@material-ui/icons/StarBorderRounded';
-<<<<<<< HEAD
 import DeleteIcon from '@material-ui/icons/DeleteForever';
-=======
 import EditableTextField from '../EditableTextField/EditableTextField';
->>>>>>> e970cb328d8837044a48a1a24c6af8fcc6fb4720
 import firebase from '../../utils/firebase';
 import { Board } from '../../models/index.models';
 import * as Selectors from '../../selectors/index';
