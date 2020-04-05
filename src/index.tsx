@@ -60,14 +60,17 @@ const Root: React.FC<RootProps> = ({ history }) => {
         const loadedBoards: Board[] = [];
         if (snap.val()) {
           Object.entries(snap.val()).forEach(([key, value]: [string, any]) => {
-            loadedBoards.push({
-              boardId: key,
-              name: value.name,
-              bg: {
-                color: value.bg.color,
-                media: value.bg.media || {}
-              }
-            })
+            if(!value.deleted){ 
+              loadedBoards.push({
+                boardId: key,
+                name: value.name,
+                deleted: value.deleted || false,
+                bg: {
+                  color: value.bg.color,
+                  media: value.bg.media || {}
+                }
+              })
+            }
           });
           dispatch(setBoards(loadedBoards));
         }
