@@ -11,8 +11,8 @@ import * as Selectors from '../../selectors/index';
 import { DEFAULT_BOARD_COLOR } from '../../constants/index';
 
 const StyledCard = styled(Card)`
-  width: 164px;
-  height: 88px;
+  width: 180px;
+  height: 100px;
   font-size: 1.25rem !important;
   background: rgba(9,30,66,.04) !important;
   color: black;

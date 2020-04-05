@@ -19,6 +19,7 @@ const StyledHeader = styled.div<{bg: boolean}>`
   left: 0;
   right: 0;
   color: rgb(250, 251, 252);
+  z-index: 3;
   background: ${props =>
     (props.bg ? `rgba(0,0,0,0.75)` : "rgb(0, 106, 166)")};
 

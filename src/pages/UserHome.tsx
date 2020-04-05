@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import PersonIcon from "@material-ui/icons/PersonOutline";
 import MenuIcon from "@material-ui/icons/List";
 import StarIcon from '@material-ui/icons/StarBorderRounded';
+import Hidden from '@material-ui/core/Hidden';
 
 import CreateBoardCard from '../components/CreateCard/CreateCard';
 import BoardCardList from '../components/BoardCardList/BoardCardList';
@@ -17,7 +18,7 @@ const PageWrapper = styled.div.attrs({
 })`
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
   background: rgb(250,251,252);
   color: black;
 `;
@@ -40,7 +41,7 @@ const UserHome: React.FC = () => {
               </h4>
         </Grid>
         <Grid item>
-          <Grid container direction="row" spacing={1}>
+          <Grid container direction="row" spacing={2}>
             <BoardCardList boards={starredBoards} />
           </Grid>
         </Grid>
@@ -59,21 +60,24 @@ const UserHome: React.FC = () => {
         spacing={6}
         style={{ paddingTop: "4.5rem" }}
       >
-        <Grid item sm={2}>
-          <Grid item>
-            <h4>
-              <MenuIcon
-                style={{ position: "relative", top: "6px", right: "3px" }}
-              />
-              Menu
-            </h4>
+        <Hidden smDown>
+          <Grid item sm={2}>
+            <Grid item>
+              <h4>
+                <MenuIcon
+                  style={{ position: "relative", top: "6px", right: "3px" }}
+                />
+                Menu
+              </h4>
+            </Grid>
+            <Grid item>
+              <Placeholder height={"40vh"} />
+            </Grid>
           </Grid>
-          <Grid item>
-            <Placeholder height={"40vh"} />
-          </Grid>
-        </Grid>
+        </Hidden>
         <Grid
-          sm={7}
+          xs={10}
+          sm={8}
           item
           container
           direction="column"
@@ -90,7 +94,7 @@ const UserHome: React.FC = () => {
             </h4>
           </Grid>
           <Grid item>
-            <Grid container direction="row" spacing={1}>
+            <Grid container direction="row" spacing={2}>
               <BoardCardList boards={boards} />
               <Grid item>
                 <CreateBoardCard />
