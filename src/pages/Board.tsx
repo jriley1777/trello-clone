@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import firebase from '../utils/firebase';
 
 import Grid from '@material-ui/core/Grid';
 import Placeholder from '../components/Placeholder/Placeholder';
