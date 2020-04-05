@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import StarIcon from '@material-ui/icons/StarBorderRounded';
+import EditableTextField from '../EditableTextField/EditableTextField';
 import firebase from '../../utils/firebase';
 import { Board } from '../../models/index.models';
 import * as Selectors from '../../selectors/index';
@@ -26,6 +27,7 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
     const currentUser = useSelector(Selectors.getCurrentUser);
     console.log(starred.includes(board.boardId));
     const isStarred = starred.includes(board.boardId);
+    const boardsRef = firebase.database().ref('boards');
     const starredRef = firebase.database().ref('starredBoards');
 
     const handleStarToggle = () => {
@@ -33,6 +35,16 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
         starredRef.child(currentUser.uid).child(board.boardId).remove();
       } else {
         starredRef.child(currentUser.uid).child(board.boardId).set(true);
+      }
+    }
+
+    const handleBoardTitleChange = (value: any) => {
+      if(value !== board.name) {
+        const updatedBoard = {
+          ...board,
+          name: value
+        }
+        boardsRef.child(currentUser.uid).child(board.boardId).set(updatedBoard) 
       }
     }
 
@@ -48,7 +60,12 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
           <Grid item xs={6}>
             <Grid container direction="row" alignItems="center" justify="flex-start">
               <Grid item>
-                <h4 style={{ padding: 0, margin: 0, paddingRight: '10px' }}>{board.name}</h4>
+                <EditableTextField 
+                  style={{ padding: 0, margin: 0, paddingRight: '10px' }}
+                  name='name'
+                  value={board.name}
+                  onSubmit={handleBoardTitleChange}
+                  />
               </Grid>
               <Grid item>
                 <IconButton
