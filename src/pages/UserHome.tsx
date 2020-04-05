@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import PersonIcon from "@material-ui/icons/PersonOutline";
-import RecentlyViewedIcon from "@material-ui/icons/AccessTimeOutlined";
 import MenuIcon from "@material-ui/icons/List";
+import StarIcon from '@material-ui/icons/StarBorderRounded';
 
+import CreateBoardCard from '../components/CreateCard/CreateCard';
 import BoardCardList from '../components/BoardCardList/BoardCardList';
 import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
@@ -24,6 +25,28 @@ const PageWrapper = styled.div.attrs({
 const UserHome: React.FC = () => {
   document.title = "Boards | Taskboard";
   const boards = useSelector(Selectors.getBoards);
+  const starredItems: any = useSelector(Selectors.getStarredBoards);
+
+  const renderStarredItems = (starredItems: any) => {
+    const starredBoards = boards.filter(x => starredItems.includes(x.boardId))
+    return starredBoards.length > 0 ? (
+      <>
+        <Grid item>
+          <h4>
+            <StarIcon
+              style={{ position: "relative", top: "5px", right: "3px" }}
+            />
+                Starred
+              </h4>
+        </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing={1}>
+            <BoardCardList boards={starredBoards} />
+          </Grid>
+        </Grid>
+      </>
+    ) : null;
+  }
   
   return (
     <PageWrapper>
@@ -57,17 +80,7 @@ const UserHome: React.FC = () => {
           justify="center"
           alignItems="flex-start"
         >
-          <Grid item>
-            <h4>
-              <RecentlyViewedIcon
-                style={{ position: "relative", top: "5px", right: "3px" }}
-              />
-              Recently Viewed
-            </h4>
-          </Grid>
-          <Grid item>
-            <Placeholder height={"15vh"} width={"55vw"} />
-          </Grid>
+          {renderStarredItems(starredItems) }
           <Grid item>
             <h4>
               <PersonIcon
@@ -77,7 +90,12 @@ const UserHome: React.FC = () => {
             </h4>
           </Grid>
           <Grid item>
-            <BoardCardList boards={boards} />
+            <Grid container direction="row" spacing={1}>
+              <BoardCardList boards={boards} />
+              <Grid item>
+                <CreateBoardCard />
+              </Grid> 
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
