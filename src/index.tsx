@@ -46,8 +46,8 @@ const Root: React.FC<RootProps> = ({ history }) => {
         }
         setLoading(false);
       } else {
+        dispatch(clearUser())
         dispatch(clearBoards());
-        dispatch(clearUser());
         setLoading(false);
       }
     });

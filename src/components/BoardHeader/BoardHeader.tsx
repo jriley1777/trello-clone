@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import StarIcon from '@material-ui/icons/StarBorderRounded';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
@@ -14,8 +15,9 @@ import * as Constants from '../../constants/index';
 
 const StyledHeader = styled.div`
     position: relative;
-    margin-top: 48px;
-    height: 48px;
+    margin-top: 44px;
+    height: 36px;
+    padding-top: 4px;
     font-weight: bold;
     background: rgba(0,0,0,0.25);
     color: white;
@@ -67,37 +69,59 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
           direction="row"
           justify="space-between"
           alignItems="center"
-          style={{ height: "48px", padding: "0 20px 0 30px" }}
+          style={{ padding: "0 5px 0 5px" }}
         >
-          <Grid item xs={6}>
-            <Grid container direction="row" alignItems="center" justify="flex-start">
+          <Grid item xs={4}>
+            <Grid container 
+              direction="row" 
+              alignItems="center" 
+              justify="flex-start">
               <Grid item>
-                <EditableTextField 
+                <EditableTextField
                   name='name'
                   value={board.name}
                   onSubmit={handleBoardTitleChange}
+                  style={{marginRight: '5px'}}
                   />
               </Grid>
               <Grid item>
-                <IconButton
-                  aria-label="star"
-                  onClick={handleStarToggle}
+                <Avatar
+                  variant="rounded"
+                  style={{
+                    backgroundColor: `rgba(255,255,255,0.3)`,
+                    height: '2rem',
+                    width: '2.5rem',
+                  }}
                 >
-                  <StarIcon style={{ color: isStarred ? 'gold' : "white" }} />
-                </IconButton>
+                  <IconButton
+                    aria-label="star"
+                    onClick={handleStarToggle}
+                  >
+                    <StarIcon style={{ color: isStarred ? 'gold' : "white" }} />
+                  </IconButton> 
+                </Avatar>
               </Grid>  
             </Grid>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Grid container direction="row" alignItems="center" justify="flex-end">
               <Grid item>
-                <IconButton
-                  aria-label="delete"
-                  onClick={handleDeleteBoard}
-                  style={{color: 'white'}}
+                <Avatar
+                  variant="rounded"
+                  style={{
+                    backgroundColor: `rgba(255,255,255,0.3)`,
+                    height: '2rem',
+                    width: '2.5rem',
+                  }}
                 >
-                  <DeleteIcon />
-                </IconButton>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={handleDeleteBoard}
+                    style={{ color: 'white' }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Avatar>
               </Grid>
             </Grid>
           </Grid>
