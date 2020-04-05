@@ -43,8 +43,8 @@ const CreateCard = () => {
                 style={{ height: "100%" }}
                 onClick={handleCreateBoard}
                 >
-                <CardContent>
-                    + Create new board
+                <CardContent style={{fontSize: '0.85rem'}}>
+                  Create new board
                 </CardContent>
             </CardActionArea>
         </StyledCard>

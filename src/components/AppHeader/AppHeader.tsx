@@ -20,7 +20,7 @@ const StyledHeader = styled.div<{bg: boolean}>`
   right: 0;
   color: rgb(250, 251, 252);
   background: ${props =>
-    (props.bg ? `rgba(255,255,255,0.3)` : "rgb(0, 106, 166)")};
+    (props.bg ? `rgba(0,0,0,0.75)` : "rgb(0, 106, 166)")};
 
   & > svg {
     color: #ded;

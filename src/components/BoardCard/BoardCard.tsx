@@ -5,6 +5,8 @@ import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from '@material-ui/core/CardMedia';
+import StarIcon from '@material-ui/icons/StarBorderRounded';
+import Fab from '@material-ui/core/Fab';
 
 import * as Constants from '../../constants/index';
 import { Board } from '../../models/index.models';
@@ -15,11 +17,23 @@ const StyledCard = styled(Card)<{bg: any}>`
   font-size: 1rem;
   background: ${props => props.bg.color} !important;
   color: white !important;
+  position: relative;
+  padding: 0;
 `;
 
 const StyledCardMedia = styled(CardMedia)`
   height: 100%;
   z-index: -1;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4) !important;
+  }
 `
 
 interface BoardProps extends RouteComponentProps {
@@ -41,7 +55,7 @@ const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
   }
   
   return (
-    <StyledCard bg={board.bg}>
+    <StyledCard bg={board.bg} title={board.name}>
       <CardActionArea
         style={{ height: "100%" }}
         href={Constants.buildBoardURI(boardId)}
@@ -49,10 +63,13 @@ const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
       >
         {renderMedia()}
         <CardContent
-          style={{ position: "absolute", top: "0", left: "0", fontWeight: 'bold' }}
+          style={{ position: "absolute", top: "0", left: "0", padding: "8px" }}
         >
-          {name}
+          <h4 style={{margin: 0}}>{name}</h4>
         </CardContent>
+        <div color="primary" aria-label="add" style={{ position: 'absolute', bottom: '0', right: '4px', zIndex: 3}}>
+          <StarIcon/> 
+        </div>
       </CardActionArea>
     </StyledCard>
   );

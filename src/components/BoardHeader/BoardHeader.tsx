@@ -8,7 +8,7 @@ const StyledHeader = styled.div`
     margin-top: 48px;
     height: 48px;
     font-weight: bold;
-    background: rgba(0,0,0,0.05);
+    background: rgba(0,0,0,0.25);
     color: white;
 `
 
