@@ -13,8 +13,8 @@ import * as Constants from '../../constants/index';
 import { Board } from '../../models/index.models';
 
 const StyledCard = styled(Card)<{bg: any}>`
-  width: 164px;
-  height: 88px;
+  width: 180px;
+  height: 100px;
   font-size: 1rem;
   background: ${props => props.bg.color} !important;
   color: white !important;
@@ -33,7 +33,7 @@ const StyledCardMedia = styled(CardMedia)`
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.4) !important;
+    background: rgba(0,0,0,0.2) !important;
   }
 `
 
