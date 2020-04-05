@@ -10,12 +10,12 @@ const starred = createSlice({
       const starred: string[] = action.payload;
       return starred;
     },
-    clearSttarredBoards(state) {
+    clearStarredBoards(state) {
       return initialStarredBoards;
     },
   },
 });
 
-export const { setStarredBoards, clearSttarredBoards } = starred.actions;
+export const { setStarredBoards, clearStarredBoards  } = starred.actions;
 
 export default starred.reducer;

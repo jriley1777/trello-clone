@@ -5,7 +5,11 @@ import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import StarIcon from '@material-ui/icons/StarBorderRounded';
+<<<<<<< HEAD
 import DeleteIcon from '@material-ui/icons/DeleteForever';
+=======
+import EditableTextField from '../EditableTextField/EditableTextField';
+>>>>>>> e970cb328d8837044a48a1a24c6af8fcc6fb4720
 import firebase from '../../utils/firebase';
 import { Board } from '../../models/index.models';
 import * as Selectors from '../../selectors/index';
@@ -49,6 +53,16 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
       history.push(Constants.buildUserURI(currentUser.uid))
     }
 
+    const handleBoardTitleChange = (value: any) => {
+      if(value !== board.name) {
+        const updatedBoard = {
+          ...board,
+          name: value
+        }
+        boardsRef.child(currentUser.uid).child(board.boardId).set(updatedBoard) 
+      }
+    }
+
     return (
       <StyledHeader>
         <Grid
@@ -61,7 +75,11 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
           <Grid item xs={6}>
             <Grid container direction="row" alignItems="center" justify="flex-start">
               <Grid item>
-                <h4 style={{ padding: 0, margin: 0, paddingRight: '10px' }}>{board.name}</h4>
+                <EditableTextField 
+                  name='name'
+                  value={board.name}
+                  onSubmit={handleBoardTitleChange}
+                  />
               </Grid>
               <Grid item>
                 <IconButton

@@ -13,10 +13,17 @@ const boards = createSlice({
     },
     clearBoards(state){
       return initialBoards;
+    },
+    updateBoard(state, action) {
+      const updatedBoard: Board = action.payload;
+      return [
+        ...state,
+        updatedBoard
+      ]
     }
   }
 });
 
-export const { setBoards, clearBoards } = boards.actions;
+export const { setBoards, clearBoards, updateBoard } = boards.actions;
 
 export default boards.reducer;
