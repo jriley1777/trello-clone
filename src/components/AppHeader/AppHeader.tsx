@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import firebase from '../../utils/firebase';
 import { useSelector } from "react-redux";
@@ -7,7 +7,8 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
-import Card from '@material-ui/core/Card';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { clearUser } from '../../features/auth/authSlice';
 import AppTitle from '../AppTitle/AppTitle';
 import * as Constants from "../../constants/index";
@@ -18,6 +19,9 @@ const StyledHeader = styled.div<{bg: boolean}>`
   top: 0;
   left: 0;
   right: 0;
+  height: 36px;
+  padding: 4px;
+  margin: 0;
   color: rgb(250, 251, 252);
   z-index: 3;
   background: ${props =>
@@ -36,31 +40,22 @@ const StyledIconButton = styled(IconButton)`
   border-radius: 5px;
 `;
 
-const StyledUserMenu = styled(Card)`
-  position: absolute;
-  right: 0;
-  padding: 1rem 10px 1rem 10px;
-  min-width: 300px;
-  margin-top: 1rem;
-`;
-
-const LogoutLink = styled.div`
-  width: 100%;
-  padding: 5px;
-  cursor: pointer;
-  &:hover {
-    background: #ddd;
-  }
-`;
-
 interface HeaderProps extends RouteComponentProps {
     background?: boolean
 }
 
 const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
-    const [userMenu, showUserMenu] = useState(false);
     const currentUser = useSelector(Selectors.getCurrentUser);
     const { displayName, photoURL, uid } = currentUser;
+
+    //menu functions
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleMenuClose = () => {
+      setAnchorEl(null);
+    };
 
     const handleLogout = () => {
       firebase
@@ -74,14 +69,6 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
         });
     }
 
-    const renderUserMenu = (userMenu: boolean) => {
-      return userMenu ? (
-        <StyledUserMenu>
-          <LogoutLink onClick={handleLogout}>Log out</LogoutLink>
-        </StyledUserMenu>
-      ) : null;
-    }
-
     return (
       <StyledHeader bg={background}>
         <Grid
@@ -89,28 +76,60 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
           direction="row"
           justify="space-between"
           alignItems="center"
-          spacing={6}
-          style={{ padding: "0 20px 0 20px" }}
+          style={{ padding: "0 5px 0 5px" }}
         >
-          <Grid item>
-            <StyledIconButton
-              aria-label="home"
-              onClick={() => history.push(Constants.buildUserURI(uid))}
-            >
-              <HomeIcon style={{ color: "white" }} />
-            </StyledIconButton>
+          <Grid item xs={4}>
+            <Grid container direction="row" justify="flex-start">
+              <Grid item>
+                <Avatar 
+                  variant="rounded"
+                  style={{
+                    backgroundColor: `rgba(255,255,255,0.3)`,
+                    height: '2rem',
+                    width: '2.5rem',
+                  }}
+                  >
+                  <StyledIconButton
+                    aria-label="home"
+                    onClick={() => history.push(Constants.buildUserURI(uid))}
+                  >
+                    <HomeIcon style={{ color: "white" }} />
+                  </StyledIconButton> 
+                </Avatar>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item>
+          <Grid item xs={4}>
             <AppTitle light to={Constants.buildUserURI(uid)} />
           </Grid>
-          <Grid item>
-            <Avatar
-              alt={displayName}
-              src={photoURL}
-              style={{ height: "2rem", width: "2rem", cursor: "pointer" }}
-              onClick={() => showUserMenu(!userMenu)}
-            />
-            {renderUserMenu(userMenu)}
+          <Grid item xs={4}>
+            <Grid container direction="row" justify="flex-end">
+              <Grid item>
+                  <StyledIconButton
+                    aria-controls="user-menu"
+                    aria-haspopup="true"
+                    onClick={handleMenuOpen}
+                    style={{ height: '2rem', margin: 0, padding: 0}}
+                  >
+                    <Avatar
+                      alt={displayName}
+                      src={photoURL}
+                      style={{ height: "2rem", width: "2rem", margin: 0, padding: 0 }}
+                    />
+                  </StyledIconButton> 
+                <Menu
+                  id="user-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                >
+                  <MenuItem disabled>{ currentUser.displayName }</MenuItem>
+                  <hr />
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </StyledHeader>
