@@ -126,8 +126,6 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
                 >
                   <MenuItem disabled>{ currentUser.displayName }</MenuItem>
                   <hr />
-                  <MenuItem onClick={handleMenuClose}>Placeholder</MenuItem>
-                  <MenuItem onClick={handleMenuClose}>Placeholder</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </Grid>
