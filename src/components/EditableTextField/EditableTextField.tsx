@@ -33,7 +33,7 @@ const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style }) 
         setText(e.target.value)
     }
 
-    return !editing ? (
+    return editing ? (
         <StyledInputBase 
             autoFocus
             name={name}
