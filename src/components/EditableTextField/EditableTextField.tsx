@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import TextField from '@material-ui/core/TextField';
+import InputBase from '@material-ui/core/InputBase';
 
+const StyledInputBase = styled(InputBase)`
+    color: inherit !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    max-width: inherit !imporant;
+    width: inherit !important;
+    height: inherit !important;
+    background: rgba(0,0,0,0.2);
+    border-radius: 5px;
+`
 
 interface ETProps {
     name: string,
@@ -10,7 +22,7 @@ interface ETProps {
     style?: React.CSSProperties
 }
 
-const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit }) => {
+const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style }) => {
     const [editing, setEditing] = useState(false);
     const [ text, setText ] = useState(value);
     const handleBlur = () => {
@@ -21,18 +33,17 @@ const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit }) => {
         setText(e.target.value)
     }
 
-    return editing ? (
-        <TextField 
-            size="small"
+    return !editing ? (
+        <StyledInputBase 
             autoFocus
             name={name}
             value={text}
             onChange={handleChange}
             onBlur={handleBlur}
-            style={{ color: 'inherit !important'}}
+            style={style}
             />
     ) : (
-        <span onClick={() => setEditing(!editing)}>{ value }</span>
+        <span onClick={() => setEditing(!editing)} style={style}>{ value }</span>
     )
 };
 

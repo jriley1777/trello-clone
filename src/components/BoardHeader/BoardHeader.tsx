@@ -61,7 +61,6 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
             <Grid container direction="row" alignItems="center" justify="flex-start">
               <Grid item>
                 <EditableTextField 
-                  style={{ padding: 0, margin: 0, paddingRight: '10px' }}
                   name='name'
                   value={board.name}
                   onSubmit={handleBoardTitleChange}
