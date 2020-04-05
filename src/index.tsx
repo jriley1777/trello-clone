@@ -8,6 +8,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { setUser, clearUser } from './features/auth/authSlice';
 import { setBoards, clearBoards } from './features/boards/boardsSlice';
+import { setStarredBoards } from './features/boards/starredBoardsSlice';
 import * as Constants from './constants/index';
 import { Board } from './models/index.models'
 import * as Selectors from './selectors/index';
@@ -22,6 +23,7 @@ const Root: React.FC<RootProps> = ({ history }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const boardsRef = firebase.database().ref('boards');
+  const starredRef = firebase.database().ref('starredBoards');
   const isAuthenticated = useSelector(Selectors.isAuthenticated);
   const currentUser = useSelector(Selectors.getCurrentUser);
 
@@ -69,7 +71,13 @@ const Root: React.FC<RootProps> = ({ history }) => {
           });
           dispatch(setBoards(loadedBoards));
         }
-        setLoading(false);
+        starredRef.child(currentUser.uid).on('value', snap => {
+          if (snap.val()) {
+            const loadedStars = Object.keys(snap.val());
+            dispatch(setStarredBoards(loadedStars));
+          }
+          setLoading(false);
+        })
       });
     }
   }, [isAuthenticated])

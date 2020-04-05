@@ -28,6 +28,7 @@ const Board = () => {
     const { boardId } = useParams();
     const boards = useSelector(Selectors.getBoards);
     const board = boards.find(x => x.boardId === boardId);
+    
     return (
       <PageWrapper bg={board!.bg}>
         <AppHeader background={!!board!.bg.media} />

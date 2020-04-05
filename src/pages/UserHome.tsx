@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
-import firebase from '../utils/firebase';
+import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import PersonIcon from "@material-ui/icons/PersonOutline";
 import MenuIcon from "@material-ui/icons/List";
@@ -12,7 +11,6 @@ import BoardCardList from '../components/BoardCardList/BoardCardList';
 import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
 import * as Selectors from '../selectors/index';
-import { setStarredBoards } from '../features/boards/starredBoardsSlice';
 
 const PageWrapper = styled.div.attrs({
   className: "PageWrapper"
@@ -26,20 +24,8 @@ const PageWrapper = styled.div.attrs({
 
 const UserHome: React.FC = () => {
   document.title = "Boards | Taskboard";
-  const dispatch = useDispatch();
   const boards = useSelector(Selectors.getBoards);
   const starredItems: any = useSelector(Selectors.getStarredBoards);
-  const currentUser = useSelector(Selectors.getCurrentUser);
-  const starredRef = firebase.database().ref('starredBoards');
-
-  useEffect(() => {
-    starredRef.child(currentUser.uid).on('value', snap => {
-      if(snap.val()){
-        const loadedStars = Object.keys(snap.val());
-        dispatch(setStarredBoards(loadedStars));
-      }
-    })
-  }, []);
 
   const renderStarredItems = (starredItems: any) => {
     const starredBoards = boards.filter(x => starredItems.includes(x.boardId))
