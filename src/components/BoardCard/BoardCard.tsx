@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from '@material-ui/core/CardMedia';
 import StarIcon from '@material-ui/icons/StarBorderRounded';
-import Fab from '@material-ui/core/Fab';
+import * as Selectors from '../../selectors/index';
 
 import * as Constants from '../../constants/index';
 import { Board } from '../../models/index.models';
@@ -37,11 +38,13 @@ const StyledCardMedia = styled(CardMedia)`
 `
 
 interface BoardProps extends RouteComponentProps {
-    board: Board
+    board: Board,
 }
 
 const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
   const { name, boardId } = board;
+  const starred = useSelector(Selectors.getStarredBoards);
+  const isStarred = starred.includes(board.boardId);
 
   const handleActionLink = (e: any) => {
     e.preventDefault();
@@ -67,8 +70,16 @@ const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
         >
           <h4 style={{margin: 0}}>{name}</h4>
         </CardContent>
-        <div color="primary" aria-label="add" style={{ position: 'absolute', bottom: '0', right: '4px', zIndex: 3}}>
-          <StarIcon/> 
+        <div 
+          style={{ 
+            position: 'absolute', 
+            bottom: '0', 
+            right: '4px', 
+            }}>
+          <StarIcon style={{ 
+            color: isStarred ? 'gold' : 'white',
+            display: isStarred ? 'inline-block' : 'none'
+            }}/> 
         </div>
       </CardActionArea>
     </StyledCard>
