@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import PersonIcon from "@material-ui/icons/PersonOutline";
+import RecentIcon from '@material-ui/icons/AccessTime';
 import MenuIcon from "@material-ui/icons/List";
 import StarIcon from '@material-ui/icons/StarBorderRounded';
 import Hidden from '@material-ui/core/Hidden';
@@ -27,10 +28,33 @@ const UserHome: React.FC = () => {
   document.title = "Boards | Taskboard";
   const boards = useSelector(Selectors.getBoards);
   const starredItems: any = useSelector(Selectors.getStarredBoards);
+  const starredBoards = boards.filter(x => starredItems.includes(x.boardId))
+  const recentBoards = boards.filter(x => {
+    return x.lastAccessTime && (new Date().getTime() - x.lastAccessTime) < 3600000;
+  }).sort((a, b) =>  b.lastAccessTime > a.lastAccessTime ? 1 : -1).slice(0, 4); 
+
+  const renderRecentItems = (recentItems: any) => {
+    return recentItems.length > 0 ? (
+      <>
+        <Grid item>
+          <h4>
+            <RecentIcon
+              style={{ position: "relative", top: "5px", right: "3px" }}
+            />
+            Recent Items
+          </h4>
+        </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing={2}>
+            <BoardCardList boards={recentItems} />
+          </Grid>
+        </Grid>
+      </>
+    ) : null;
+  }
 
   const renderStarredItems = (starredItems: any) => {
-    const starredBoards = boards.filter(x => starredItems.includes(x.boardId))
-    return starredBoards.length > 0 ? (
+    return starredItems.length > 0 ? (
       <>
         <Grid item>
           <h4>
@@ -42,7 +66,7 @@ const UserHome: React.FC = () => {
         </Grid>
         <Grid item>
           <Grid container direction="row" spacing={2}>
-            <BoardCardList boards={starredBoards} />
+            <BoardCardList boards={starredItems} />
           </Grid>
         </Grid>
       </>
@@ -84,7 +108,8 @@ const UserHome: React.FC = () => {
           justify="center"
           alignItems="flex-start"
         >
-          {renderStarredItems(starredItems) }
+          { renderRecentItems(recentBoards) }
+          { renderStarredItems(starredBoards) }
           <Grid item>
             <h4>
               <PersonIcon
