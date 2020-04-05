@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import StarIcon from '@material-ui/icons/StarBorderRounded';
+import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditableTextField from '../EditableTextField/EditableTextField';
 import firebase from '../../utils/firebase';
 import { Board } from '../../models/index.models';
 import * as Selectors from '../../selectors/index';
+import * as Constants from '../../constants/index';
 
 const StyledHeader = styled.div`
     position: relative;
@@ -23,9 +26,9 @@ interface BoardHeaderProps {
 }
 
 const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
+    const history = useHistory();
     const starred = useSelector(Selectors.getStarredBoards);
     const currentUser = useSelector(Selectors.getCurrentUser);
-    console.log(starred.includes(board.boardId));
     const isStarred = starred.includes(board.boardId);
     const boardsRef = firebase.database().ref('boards');
     const starredRef = firebase.database().ref('starredBoards');
@@ -36,6 +39,15 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
       } else {
         starredRef.child(currentUser.uid).child(board.boardId).set(true);
       }
+    };
+
+    const handleDeleteBoard = () => {
+      const updatedBoard: Board = {
+        ...board,
+        deleted: true
+      };
+      boardsRef.child(currentUser.uid).child(board.boardId).set(updatedBoard);
+      history.push(Constants.buildUserURI(currentUser.uid))
     }
 
     const handleBoardTitleChange = (value: any) => {
@@ -68,7 +80,7 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
               </Grid>
               <Grid item>
                 <IconButton
-                  aria-label="home"
+                  aria-label="star"
                   onClick={handleStarToggle}
                 >
                   <StarIcon style={{ color: isStarred ? 'gold' : "white" }} />
@@ -79,7 +91,13 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
           <Grid item xs={6}>
             <Grid container direction="row" alignItems="center" justify="flex-end">
               <Grid item>
-                <h4 style={{ padding: 0, margin: 0 }}>Placeholder</h4>
+                <IconButton
+                  aria-label="delete"
+                  onClick={handleDeleteBoard}
+                  style={{color: 'white'}}
+                >
+                  <DeleteIcon />
+                </IconButton>
               </Grid>
             </Grid>
           </Grid>
