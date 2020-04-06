@@ -89,8 +89,8 @@ const Board = () => {
 
     const renderBoardLists = (lists: any[]) => {
       return lists.map(list => (
-        <Grid item>
-            <BoardList key={list.listId} list={list} />
+        <Grid item key={list.listId}>
+            <BoardList list={list} />
         </Grid>
       ))
     }

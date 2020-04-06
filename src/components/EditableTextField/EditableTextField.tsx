@@ -37,7 +37,7 @@ interface ETProps {
 const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style }) => {
     const [editing, setEditing] = useState(false);
     const [ text, setText ] = useState(value);
-    const handleBlur = () => {
+    const handleSubmit = () => {
         onSubmit(text);
         setEditing(!editing);
     }
@@ -46,14 +46,16 @@ const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style }) 
     }
 
     return editing ? (
-        <StyledInputBase 
-            autoFocus
-            name={name}
-            value={text}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            style={style}
+        <form onSubmit={handleSubmit}>
+            <StyledInputBase
+                autoFocus
+                name={name}
+                value={text}
+                onChange={handleChange}
+                onBlur={handleSubmit}
+                style={style}
             />
+        </form>
     ) : (
         <StyledSpan 
             onClick={() => setEditing(!editing)} 
