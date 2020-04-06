@@ -10,6 +10,7 @@ import AppHeader from '../components/AppHeader/AppHeader';
 import BoardHeader from '../components/BoardHeader/BoardHeader';
 
 import * as Selectors from '../selectors/index';
+import { Board as BoardType } from '../models/index.models';
 
 const PageWrapper = styled.div<{ bg: any }>`
   width: 100vw;
@@ -22,13 +23,26 @@ const PageWrapper = styled.div<{ bg: any }>`
   background-size: cover;
 `;
 
+const StyledAttribution = styled.div`
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    & a {
+      text-decoration: none;
+      color: #ded;
+      &:hover {
+        color: gold;
+      }
+    }
+`;
 
 const Board = () => {
     document.title = "BoardName | Taskboard";
     const { boardId } = useParams();
     const boards = useSelector(Selectors.getBoards);
     const currentUser = useSelector(Selectors.getCurrentUser);
-    const board = boards.find(x => x.boardId === boardId);
+    const board = boards.find(x => x.boardId === boardId)!;
     const boardsRef = firebase.database().ref('boards');
 
     useEffect(() => {
@@ -38,6 +52,17 @@ const Board = () => {
       }
       boardsRef.child(currentUser.uid).child(board!.boardId).set(updatedBoard)
     }, [])
+
+    const renderUnsplashCredit = (board: BoardType) => {
+      if(board!.bg.media){
+        let { name, links } = board.bg.media.user;
+        return (
+          <StyledAttribution>
+            <span>Photo by <a href={links.html} target="_">{ name }</a> on <a href="https://unsplash.com" target="_">Unsplash</a></span>
+          </StyledAttribution>
+        )
+      }
+    }
     
     return (
       <PageWrapper bg={board!.bg}>
@@ -64,6 +89,7 @@ const Board = () => {
             <Placeholder height={"40vh"} />
           </Grid>
         </Grid>
+        { renderUnsplashCredit(board) }
       </PageWrapper>
     );
 };
