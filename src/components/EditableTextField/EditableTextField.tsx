@@ -10,14 +10,17 @@ const StyledInputBase = styled(InputBase)`
     max-width: inherit !imporant;
     width: inherit !important;
     height: inherit !important;
-    padding-left: 5px !important;
+    padding-left: 20px;
     background: white;
     color: black;
     border-radius: 5px;
+    white-space: nowrap !important;
 `
 
 const StyledSpan = styled.span`
-    padding: 5px;
+    display: block;
+    padding: 5px 20px 5px 20px;
+    border-radius: 5px;
     &:hover {
       cursor: pointer;
       background: rgba(0,0,0,0.2)
@@ -34,7 +37,7 @@ interface ETProps {
 const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style }) => {
     const [editing, setEditing] = useState(false);
     const [ text, setText ] = useState(value);
-    const handleBlur = () => {
+    const handleSubmit = () => {
         onSubmit(text);
         setEditing(!editing);
     }
@@ -43,14 +46,16 @@ const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style }) 
     }
 
     return editing ? (
-        <StyledInputBase 
-            autoFocus
-            name={name}
-            value={text}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            style={style}
+        <form onSubmit={handleSubmit}>
+            <StyledInputBase
+                autoFocus
+                name={name}
+                value={text}
+                onChange={handleChange}
+                onBlur={handleSubmit}
+                style={style}
             />
+        </form>
     ) : (
         <StyledSpan 
             onClick={() => setEditing(!editing)} 

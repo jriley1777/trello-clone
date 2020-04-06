@@ -8,7 +8,7 @@ import MenuIcon from "@material-ui/icons/List";
 import StarIcon from '@material-ui/icons/StarBorderRounded';
 import Hidden from '@material-ui/core/Hidden';
 
-import CreateBoardCard from '../components/CreateCard/CreateCard';
+import CreateBoardCard from '../components/CreateBoardButton/CreateBoardButton';
 import BoardCardList from '../components/BoardCardList/BoardCardList';
 import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
