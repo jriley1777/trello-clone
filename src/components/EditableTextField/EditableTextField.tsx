@@ -10,14 +10,17 @@ const StyledInputBase = styled(InputBase)`
     max-width: inherit !imporant;
     width: inherit !important;
     height: inherit !important;
-    padding-left: 20px !important;
+    padding-left: 20px;
     background: white;
     color: black;
     border-radius: 5px;
+    white-space: nowrap !important;
 `
 
 const StyledSpan = styled.span`
-    padding: 5px 5px 5px 20px;
+    display: block;
+    padding: 5px 20px 5px 20px;
+    border-radius: 5px;
     &:hover {
       cursor: pointer;
       background: rgba(0,0,0,0.2)
