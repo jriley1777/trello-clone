@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
 import BoardHeader from '../components/BoardHeader/BoardHeader';
+import CreateListButton from '../components/CreateListButton/CreateListButton';
 
 import * as Selectors from '../selectors/index';
 import { Board as BoardType } from '../models/index.models';
@@ -73,11 +74,11 @@ const Board = () => {
           direction="row"
           justify="flex-start"
           alignItems="flex-start"
-          spacing={3}
-          style={{ padding: "3rem 20px 0 20px" }}
+          spacing={1}
+          style={{ padding: "8px" }}
         >
           <Grid item xs={2}>
-            <Placeholder height={"40vh"} />
+            <CreateListButton />
           </Grid>
           <Grid item xs={2}>
             <Placeholder height={"40vh"} />
