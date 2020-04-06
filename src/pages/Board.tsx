@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import firebase from '../utils/firebase';
 
 import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
 import AppHeader from '../components/AppHeader/AppHeader';
 import BoardHeader from '../components/BoardHeader/BoardHeader';
 import CreateItemButton from '../components/CreateItemButton/CreateItemButton';
@@ -42,13 +41,6 @@ const StyledAttribution = styled.div`
     }
 `;
 
-const StyledGridListItem = styled(GridListTile)`
-  height: 100% important!
-  min-height: 50vh !important;
-  max-height: 75vh;
-  overflow-y: auto !important;
-`;
-
 
 const Board = () => {
     document.title = "BoardName | Taskboard";
@@ -74,7 +66,11 @@ const Board = () => {
           Object.entries(snap.val()).forEach(([key, value]: [string, any]) => {
             loadedLists.push({
               listId: key,
-              name: value.name 
+              name: value.name,
+              cards: value.cards && Object.entries(value.cards).map(([key, value]: any) => ({
+                cardId: key,
+                name: value.name
+              })) || []
             })
           });
           dispatch(setCurrentLists(loadedLists));
@@ -99,14 +95,14 @@ const Board = () => {
 
     const renderBoardLists = (lists: any[]) => {
       return lists.map(list => (
-        // <StyledGridListItem key={list.name} cols={2}>
-        <BoardList list={list} />
-        // </StyledGridListItem >
+        <BoardList key={list.listId} list={list} />
       ))
     }
 
-    const handleListCreate = (list: {name: string}) => {
-      listsRef.child(boardId!).push().set(list);
+    const handleListCreate = (list: {list: string}) => {
+      listsRef.child(boardId!).push().set({
+        name: list.list
+      });
     }
     
     return (

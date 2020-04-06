@@ -5,7 +5,6 @@ import firebase from '../../utils/firebase';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import EditableTextField from '../EditableTextField/EditableTextField';
-import Placeholder from '../Placeholder/Placeholder';
 import CreateItemButton from '../CreateItemButton/CreateItemButton';
 
 import * as Selectors from '../../selectors/index';
@@ -19,7 +18,7 @@ const StyledPaper = styled(Paper)`
     font-weight: bold !important;
     padding: 8px !important;
     margin-right: 8px;
-    background: rgb(255,255,255,0.5) !important;
+    background: rgb(235,236,240) !important;
     min-width: 17vw !important;
     max-height: 80vh !important;
     overflow-x: hidden !important;
@@ -32,20 +31,26 @@ interface BoardListProps {
 const BoardList: React.FC<BoardListProps> = ({ list }) => {
     const listsRef = firebase.database().ref('lists');
     const currentBoard = useSelector(Selectors.getCurrentBoard)
-    const handleTitleChange = (value: any) => {
+    const handleListNameChange = (value: any) => {
         if (value !== list.name) {
             listsRef.child(currentBoard).child(list.listId).set({ name: value })
         }
     }
-
-    const itemCount = Math.floor(Math.random() * 3);
-    const renderPlaceholders = () => {
-        const elem = new Array(itemCount).fill(0);
-        return elem.map(() => (
-            <Grid item style={{ marginBottom: '8px'}}>
-                <Placeholder width="16.5vw" height="10vh" />
-            </Grid>
-        ))
+    const handleCardCreate = (card: { card: string}) => {
+        console.log(card)
+        listsRef.child(currentBoard).child(list.listId).child('cards').push().set({
+            name: card.card
+        });
+    }
+    console.log(list);
+    const renderCards = () => {
+        if (list.cards) {
+            return list.cards.map((card: any) => (
+                <Grid key={card.cardId} item style={{ marginBottom: '8px' }}>
+                    {card.name}
+                </Grid>
+            )); 
+        }
     }
 
     return (
@@ -62,7 +67,7 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
                         <EditableTextField
                             name='listName'
                             value={list.name}
-                            onSubmit={handleTitleChange}
+                            onSubmit={handleListNameChange}
                             style={{ width: '100% !important' }}
                         />
                     </Grid>
@@ -74,19 +79,20 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
                                 maxHeight: '50vh'
                             }}
                             >
-                            {renderPlaceholders()}
+                            {renderCards()}
                         </Grid> 
                     </Grid>
                     <Grid item>
                         <div
                             style={{
+                                background: '#fff !important',
                                 maxWidth: '16vw !important',
                             }}>
                             <CreateItemButton
                                 name='card'
                                 buttonText='Add a Card'
                                 actionText='Add Card'
-                                onSubmit={() => { }}
+                                onSubmit={handleCardCreate}
                             /> 
                         </div>
                     </Grid>

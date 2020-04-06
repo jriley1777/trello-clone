@@ -16,7 +16,7 @@ const StyledButton = styled(Button)`
     margin: 0 !important;
 `;
 const StyledPaper = styled(Paper)`
-    background: rgb(235,235,240) !important;
+    background: rgb(235,235,240);
     width: 17vw !important;
     padding: 4px;
 `;
@@ -26,17 +26,30 @@ interface CLButtonProps {
     onSubmit: any,
     buttonText: string,
     actionText: string,
-    defaultValue?: any
+    defaultValue?: any,
+    stayActive?: boolean
 }
 
-const CreateItemButton: React.FC<CLButtonProps> = ({ onSubmit, name, buttonText, actionText, defaultValue='' }) => {
+const CreateItemButton: React.FC<CLButtonProps> = ({ 
+    onSubmit, 
+    name, 
+    buttonText, 
+    actionText, 
+    defaultValue='',
+    stayActive=false
+ }) => {
     const [isActive, setIsActive] = useState(false);
     const [fieldValue, setFieldValue] = useState(defaultValue);
 
-    const handleListSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit({ name: fieldValue });
-        setFieldValue('');
+        if(fieldValue !== defaultValue && fieldValue) {
+            onSubmit({ [name]: fieldValue });
+            setFieldValue('');
+            if(!stayActive) {
+                setIsActive(false);
+            }
+        }
     }
 
     const toggleActive = () => {
@@ -55,9 +68,8 @@ const CreateItemButton: React.FC<CLButtonProps> = ({ onSubmit, name, buttonText,
     ) : (
         <div>
             <StyledPaper 
-                elevation={0}
-                onBlur={toggleActive}>
-                    <form onSubmit={handleListSubmit}>
+                elevation={0}>
+                    <form onSubmit={handleSubmit}>
                         <Grid container direction="column" spacing={1}>
                             <Grid item>
                                 <TextField 
