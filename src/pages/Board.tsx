@@ -4,10 +4,11 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import firebase from '../utils/firebase';
 
-import Grid from '@material-ui/core/Grid';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 import AppHeader from '../components/AppHeader/AppHeader';
 import BoardHeader from '../components/BoardHeader/BoardHeader';
-import CreateListButton from '../components/CreateListButton/CreateListButton';
+import CreateItemButton from '../components/CreateItemButton/CreateItemButton';
 import BoardList from '../components/BoardList/BoardList';
 
 import * as Selectors from '../selectors/index';
@@ -28,9 +29,10 @@ const PageWrapper = styled.div<{ bg: any }>`
 
 const StyledAttribution = styled.div`
     position: absolute;
-    bottom: 20px;
-    left: 20px;
+    bottom: 8px;
+    left: 8px;
     color: white;
+    font-weight: bold;
     & a {
       text-decoration: none;
       color: #ded;
@@ -39,6 +41,14 @@ const StyledAttribution = styled.div`
       }
     }
 `;
+
+const StyledGridListItem = styled(GridListTile)`
+  height: 100% important!
+  min-height: 50vh !important;
+  max-height: 75vh;
+  overflow-y: auto !important;
+`;
+
 
 const Board = () => {
     document.title = "BoardName | Taskboard";
@@ -89,29 +99,47 @@ const Board = () => {
 
     const renderBoardLists = (lists: any[]) => {
       return lists.map(list => (
-        <Grid item key={list.listId}>
-            <BoardList list={list} />
-        </Grid>
+        // <StyledGridListItem key={list.name} cols={2}>
+        <BoardList list={list} />
+        // </StyledGridListItem >
       ))
+    }
+
+    const handleListCreate = (list: {name: string}) => {
+      listsRef.child(boardId!).push().set(list);
     }
     
     return (
       <PageWrapper bg={board!.bg}>
         <AppHeader background={!!board!.bg.media} />
         <BoardHeader board={board!} />
-        <Grid 
-          container
-          spacing={1}
-          direction="row"
-          justify="flex-start"
-          alignItems="flex-start"
-          style={{ padding: '8px' }}
-          >
-          {renderBoardLists(currentLists)}
-          <Grid item>
-            <CreateListButton boardId={boardId!} />
-          </Grid>
-        </Grid>
+        <div
+          style={{
+            display: 'flex',
+
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            overflow: 'hidden',
+            height: '100%',
+            padding: '8px'
+          }}>
+          <GridList 
+            cols={5.5}
+            style={{
+              flexWrap: 'nowrap',
+              transform: 'translateZ(0)',
+            }}
+            >
+            {renderBoardLists(currentLists)}
+            <CreateItemButton
+              name="list"
+              onSubmit={handleListCreate}
+              buttonText='Add a list'
+              actionText='Add list'
+            />
+          </GridList> 
+        </div>
         { renderUnsplashCredit(board) }
       </PageWrapper>
     );
