@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import firebase from '../utils/firebase';
 
 import Grid from '@material-ui/core/Grid';
-import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
 import BoardHeader from '../components/BoardHeader/BoardHeader';
+import CreateListButton from '../components/CreateListButton/CreateListButton';
+import BoardList from '../components/BoardList/BoardList';
 
 import * as Selectors from '../selectors/index';
+import { setCurrentLists, clearCurrentLists } from '../features/lists/listSlice';
+import { setCurrentBoard } from '../features/boards/currentBoardSlice';
 import { Board as BoardType } from '../models/index.models';
 
 const PageWrapper = styled.div<{ bg: any }>`
@@ -39,18 +42,38 @@ const StyledAttribution = styled.div`
 
 const Board = () => {
     document.title = "BoardName | Taskboard";
+    const dispatch = useDispatch();
     const { boardId } = useParams();
     const boards = useSelector(Selectors.getBoards);
     const currentUser = useSelector(Selectors.getCurrentUser);
     const board = boards.find(x => x.boardId === boardId)!;
     const boardsRef = firebase.database().ref('boards');
+    const listsRef = firebase.database().ref('lists');
+    const currentLists = useSelector(Selectors.getCurrentLists);
 
     useEffect(() => {
+      dispatch(setCurrentBoard(boardId));
       let updatedBoard = {
         ...board,
         lastAccessTime: firebase.database.ServerValue.TIMESTAMP
       }
-      boardsRef.child(currentUser.uid).child(board!.boardId).set(updatedBoard)
+      boardsRef.child(currentUser.uid).child(boardId!).set(updatedBoard);
+      listsRef.child(boardId!).on('value', snap => {
+        if(snap.val()){
+          const loadedLists: any = [];
+          Object.entries(snap.val()).forEach(([key, value]: [string, any]) => {
+            loadedLists.push({
+              listId: key,
+              name: value.name 
+            })
+          });
+          dispatch(setCurrentLists(loadedLists));
+        }
+      })
+      return () => {
+        listsRef.child(boardId!).off('value');
+        dispatch(clearCurrentLists());
+      }
     }, [])
 
     const renderUnsplashCredit = (board: BoardType) => {
@@ -63,30 +86,30 @@ const Board = () => {
         )
       }
     }
+
+    const renderBoardLists = (lists: any[]) => {
+      return lists.map(list => (
+        <Grid item key={list.listId}>
+            <BoardList list={list} />
+        </Grid>
+      ))
+    }
     
     return (
       <PageWrapper bg={board!.bg}>
         <AppHeader background={!!board!.bg.media} />
         <BoardHeader board={board!} />
-        <Grid
+        <Grid 
           container
+          spacing={1}
           direction="row"
           justify="flex-start"
           alignItems="flex-start"
-          spacing={3}
-          style={{ padding: "3rem 20px 0 20px" }}
-        >
-          <Grid item xs={2}>
-            <Placeholder height={"40vh"} />
-          </Grid>
-          <Grid item xs={2}>
-            <Placeholder height={"40vh"} />
-          </Grid>
-          <Grid item xs={2}>
-            <Placeholder height={"40vh"} />
-          </Grid>
-          <Grid item xs={2}>
-            <Placeholder height={"40vh"} />
+          style={{ padding: '8px' }}
+          >
+          {renderBoardLists(currentLists)}
+          <Grid item>
+            <CreateListButton boardId={boardId!} />
           </Grid>
         </Grid>
         { renderUnsplashCredit(board) }
