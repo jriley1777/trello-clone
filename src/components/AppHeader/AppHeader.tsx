@@ -123,6 +123,15 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
                   keepMounted
                   open={Boolean(anchorEl)}
                   onClose={handleMenuClose}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }}
                 >
                   <MenuItem disabled>{ currentUser.displayName }</MenuItem>
                   <hr />
