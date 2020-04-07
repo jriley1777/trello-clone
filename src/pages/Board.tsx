@@ -67,10 +67,10 @@ const Board = () => {
             loadedLists.push({
               listId: key,
               name: value.name,
-              cards: value.cards && Object.entries(value.cards).map(([key, value]: any) => ({
+              cards: (value.cards && Object.entries(value.cards).map(([key, value]: any) => ({
                 cardId: key,
                 name: value.name
-              })) || []
+              }))) || []
             })
           });
           dispatch(setCurrentLists(loadedLists));

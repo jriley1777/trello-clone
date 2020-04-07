@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import firebase from '../../utils/firebase';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import EditableTextField from '../EditableTextField/EditableTextField';
 import CreateItemButton from '../CreateItemButton/CreateItemButton';
 import BoardListCard from '../BoardListCard/BoardListCard';
@@ -56,9 +57,9 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
     }
     const renderCards = () => {
         if (list.cards) {
-            return list.cards.map((card: any) => (
-                <Grid item>
-                    <BoardListCard key={card.name} card={card} /> 
+            return list.cards.map((card: any, index: number) => (
+                <Grid item key={card.name + index}>
+                    <BoardListCard card={card} /> 
                 </Grid>
             )); 
         }
@@ -75,11 +76,18 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
                     spacing={1}
                 >
                     <Grid item>
-                        <StyledTextField
-                            name='listName'
-                            value={list.name}
-                            onSubmit={handleListNameChange}
-                        />
+                        <Grid container direction="row" justify="space-between" alignItems="center">
+                            <Grid item xs={11}>
+                                <StyledTextField
+                                    name='listName'
+                                    value={list.name}
+                                    onSubmit={handleListNameChange}
+                                />
+                            </Grid>
+                            <Grid item xs={1}>
+                                <MoreHorizIcon fontSize="small"/>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item>
                         <StyledGrid 
@@ -90,7 +98,6 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
                             style={{
                                 maxHeight: '50vh'
                             }}
-                            xs={12}
                             >
                             {renderCards()}
                         </StyledGrid>

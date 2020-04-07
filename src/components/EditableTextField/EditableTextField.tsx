@@ -43,7 +43,6 @@ const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style, ..
         setText(e.target.value)
     }
 
-    console.log(style);
     return editing ? (
         <form onSubmit={handleSubmit}>
             <StyledInputBase
