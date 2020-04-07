@@ -16,12 +16,38 @@ const StyledBLContainer = styled.div`
 const StyledPaper = styled(Paper)`
     color: black !important;
     font-weight: bold !important;
-    padding: 8px !important;
+    padding: 8px;
     margin-right: 8px;
     background: rgb(235,236,240) !important;
-    min-width: 17vw !important;
+    // width: 17vw !important;
     max-height: 80vh !important;
     overflow-x: hidden !important;
+    text-align: left !important;
+    font-size: 0.85rem;
+`;
+
+const StyledCard = styled(Paper)`
+    background: white;
+    height: 60px;
+    display: flex;
+    flexGrow: 1;
+    padding: 12px;
+    // width: 15.5vw !important;
+
+    &:hover {
+        background: rgba(0,0,0,0.1);
+        cursor: pointer;
+    }
+`;
+
+const StyledGrid = styled(Grid)`
+    & > * {
+        width: 100% !important;
+    }
+`;
+
+const StyledTextField = styled(EditableTextField)`
+    padding-left: 12px;
 `;
 
 interface BoardListProps {
@@ -33,21 +59,22 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
     const currentBoard = useSelector(Selectors.getCurrentBoard)
     const handleListNameChange = (value: any) => {
         if (value !== list.name) {
-            listsRef.child(currentBoard).child(list.listId).set({ name: value })
+            listsRef.child(currentBoard).child(list.listId).set({ ...list, name: value })
         }
     }
     const handleCardCreate = (card: { card: string}) => {
-        console.log(card)
         listsRef.child(currentBoard).child(list.listId).child('cards').push().set({
             name: card.card
         });
     }
-    console.log(list);
     const renderCards = () => {
         if (list.cards) {
             return list.cards.map((card: any) => (
-                <Grid key={card.cardId} item style={{ marginBottom: '8px' }}>
-                    {card.name}
+                <Grid key={card.cardId} item style={{ marginBottom: '8px' }} xs={12}>
+                    <StyledCard
+                        elevation={1}>
+                        {card.name}
+                    </StyledCard>
                 </Grid>
             )); 
         }
@@ -56,7 +83,7 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
     return (
         <StyledBLContainer>
             <StyledPaper>
-                <Grid 
+                <StyledGrid 
                     container 
                     direction="column"
                     justify="center"
@@ -64,39 +91,34 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
                     spacing={1}
                 >
                     <Grid item>
-                        <EditableTextField
+                        <StyledTextField
                             name='listName'
                             value={list.name}
                             onSubmit={handleListNameChange}
-                            style={{ width: '100% !important' }}
                         />
                     </Grid>
                     <Grid item>
-                        <Grid container
+                        <StyledGrid 
+                            container
                             direction="column"
+                            justify="flex-start"
                             alignItems="flex-start"
                             style={{
                                 maxHeight: '50vh'
                             }}
+                            xs={12}
                             >
-                            {renderCards()}
-                        </Grid> 
+                            {renderCards()}</StyledGrid>
                     </Grid>
                     <Grid item>
-                        <div
-                            style={{
-                                background: '#fff !important',
-                                maxWidth: '16vw !important',
-                            }}>
-                            <CreateItemButton
-                                name='card'
-                                buttonText='Add a Card'
-                                actionText='Add Card'
-                                onSubmit={handleCardCreate}
-                            /> 
-                        </div>
+                        <CreateItemButton
+                            name='card'
+                            buttonText='Add another card'
+                            actionText='Add card'
+                            onSubmit={handleCardCreate}
+                        /> 
                     </Grid>
-                </Grid>
+                </StyledGrid>
             </StyledPaper>
         </StyledBLContainer>
     )

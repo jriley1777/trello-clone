@@ -7,8 +7,6 @@ const StyledInputBase = styled(InputBase)`
     font-size: inherit !important;
     font-weight: inherit !important;
     line-height: inherit !important;
-    max-width: inherit !imporant;
-    width: inherit !important;
     height: inherit !important;
     padding-left: 20px;
     background: white;
@@ -34,7 +32,7 @@ interface ETProps {
     style?: React.CSSProperties
 }
 
-const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style }) => {
+const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style, ...props }) => {
     const [editing, setEditing] = useState(false);
     const [ text, setText ] = useState(value);
     const handleSubmit = () => {
@@ -45,6 +43,7 @@ const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style }) 
         setText(e.target.value)
     }
 
+    console.log(style);
     return editing ? (
         <form onSubmit={handleSubmit}>
             <StyledInputBase
@@ -54,12 +53,15 @@ const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style }) 
                 onChange={handleChange}
                 onBlur={handleSubmit}
                 style={style}
+                {...props}
             />
         </form>
     ) : (
         <StyledSpan 
             onClick={() => setEditing(!editing)} 
-            style={style}>
+            style={style}
+            {...props}
+            >
             { value }
         </StyledSpan>
     )

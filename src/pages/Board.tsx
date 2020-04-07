@@ -43,12 +43,12 @@ const StyledAttribution = styled.div`
 
 
 const Board = () => {
-    document.title = "BoardName | Taskboard";
     const dispatch = useDispatch();
     const { boardId } = useParams();
     const boards = useSelector(Selectors.getBoards);
     const currentUser = useSelector(Selectors.getCurrentUser);
     const board = boards.find(x => x.boardId === boardId)!;
+    document.title = `${board.name} | Taskboard`;
     const boardsRef = firebase.database().ref('boards');
     const listsRef = firebase.database().ref('lists');
     const currentLists = useSelector(Selectors.getCurrentLists);
