@@ -27,11 +27,13 @@ const PageWrapper = styled.div.attrs({
 const UserHome: React.FC = () => {
   document.title = "Boards | Taskboard";
   const boards = useSelector(Selectors.getBoards);
-  const starredItems: any = useSelector(Selectors.getStarredBoards);
-  const starredBoards = boards.filter(x => starredItems.includes(x.boardId))
-  const recentBoards = boards.filter(x => {
-    return x.lastAccessTime && (new Date().getTime() - x.lastAccessTime) < 3600000;
-  }).sort((a, b) =>  b.lastAccessTime > a.lastAccessTime ? 1 : -1).slice(0, 4); 
+  const starredBoards = useSelector(Selectors.getStarredBoards);
+  const accessedBoards = boards.filter(board => {
+    return board.lastAccessTime && (new Date().getTime() - board.lastAccessTime) < 3600000;
+  });
+  const recentBoards = accessedBoards.length > 0 ? 
+    accessedBoards.sort((a, b) =>  b.lastAccessTime! > a.lastAccessTime! ? 1 : -1).slice(0, 4) :
+  [];
 
   const renderRecentItems = (recentItems: any) => {
     return recentItems.length > 0 ? (

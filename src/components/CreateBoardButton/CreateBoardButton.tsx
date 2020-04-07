@@ -24,18 +24,23 @@ const CreateCard = () => {
     const handleCreateBoard = async () => {
         let defaultBoard = {
             name: 'Board ' + Math.floor(Math.random()*1000),
+            createdBy: currentUser.id,
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+            lastUpdated: firebase.database.ServerValue.TIMESTAMP,
+            deleted: false,
+            isStarred: false,
             bg: {
                 color: DEFAULT_BOARD_COLOR,
                 media: {}
             }
         };
         await unsplash.photos
-            .getRandomPhoto({ query: 'nature', orientation: 'landscape'})
+            .getRandomPhoto({ query: 'nature, aerial', orientation: 'landscape'})
             .then(toJson)
             .then(json => defaultBoard.bg.media = json)
             .catch(err => console.log(err));
         console.log(defaultBoard)
-        boardsRef.child(currentUser.uid).push().set(defaultBoard);
+        boardsRef.child(currentUser.id).push().set(defaultBoard);
     }
     return (
         <StyledCard>

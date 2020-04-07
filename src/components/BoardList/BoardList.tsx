@@ -21,7 +21,6 @@ const StyledPaper = styled(Paper)`
     padding: 8px;
     margin-right: 8px;
     background: rgb(235,236,240) !important;
-    // width: 17vw !important;
     max-height: 80vh !important;
     overflow-x: hidden !important;
     text-align: left !important;
@@ -47,18 +46,19 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
     const currentBoard = useSelector(Selectors.getCurrentBoard)
     const handleListNameChange = (value: any) => {
         if (value !== list.name) {
-            listsRef.child(currentBoard).child(list.listId).set({ ...list, name: value })
+            listsRef.child(currentBoard).child(list.id).set({ ...list, name: value })
         }
     }
     const handleCardCreate = (card: { card: string}) => {
-        listsRef.child(currentBoard).child(list.listId).child('cards').push().set({
+        listsRef.child(currentBoard).child(list.id).child('cards').push().set({
             name: card.card
         });
     }
     const renderCards = () => {
         if (list.cards) {
-            return list.cards.map((card: any, index: number) => (
-                <Grid item key={card.name + index}>
+            let cards = Object.entries(list.cards).map(([key, value]: any) => ({ id: key, ...value }))
+            return cards.map((card: any, index: number) => (
+                <Grid item key={card.id}>
                     <BoardListCard card={card} /> 
                 </Grid>
             )); 

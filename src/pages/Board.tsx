@@ -47,11 +47,11 @@ const Board = () => {
     const { boardId } = useParams();
     const boards = useSelector(Selectors.getBoards);
     const currentUser = useSelector(Selectors.getCurrentUser);
-    const board = boards.find(x => x.boardId === boardId)!;
+    const board = boards.find(x => x.id === boardId)!;
     document.title = `${board.name} | Taskboard`;
     const boardsRef = firebase.database().ref('boards');
     const listsRef = firebase.database().ref('lists');
-    const currentLists = useSelector(Selectors.getCurrentLists);
+    const currentLists = useSelector(Selectors.getLists);
 
     useEffect(() => {
       dispatch(setCurrentBoard(boardId));
@@ -59,20 +59,11 @@ const Board = () => {
         ...board,
         lastAccessTime: firebase.database.ServerValue.TIMESTAMP
       }
-      boardsRef.child(currentUser.uid).child(boardId!).set(updatedBoard);
+      boardsRef.child(currentUser.id).child(boardId!).set(updatedBoard);
       listsRef.child(boardId!).on('value', snap => {
         if(snap.val()){
-          const loadedLists: any = [];
-          Object.entries(snap.val()).forEach(([key, value]: [string, any]) => {
-            loadedLists.push({
-              listId: key,
-              name: value.name,
-              cards: (value.cards && Object.entries(value.cards).map(([key, value]: any) => ({
-                cardId: key,
-                name: value.name
-              }))) || []
-            })
-          });
+          let loadedLists: any = { byId: snap.val() };
+          loadedLists.allIds = Object.keys(snap.val());
           dispatch(setCurrentLists(loadedLists));
         }
       })
@@ -95,12 +86,15 @@ const Board = () => {
 
     const renderBoardLists = (lists: any[]) => {
       return lists.map(list => (
-        <BoardList key={list.listId} list={list} />
+        <BoardList key={list.id} list={list} />
       ))
     }
 
     const handleListCreate = (list: {list: string}) => {
       listsRef.child(boardId!).push().set({
+        createdAt: firebase.database.ServerValue.TIMESTAMP,
+        lastUpdatedAt: firebase.database.ServerValue.TIMESTAMP,
+        createdBy: currentUser.id,
         name: list.list
       });
     }
@@ -112,7 +106,6 @@ const Board = () => {
         <div
           style={{
             display: 'flex',
-
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
             alignItems: 'flex-start',

@@ -29,17 +29,20 @@ interface BoardHeaderProps {
 
 const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
     const history = useHistory();
-    const starred = useSelector(Selectors.getStarredBoards);
     const currentUser = useSelector(Selectors.getCurrentUser);
-    const isStarred = starred.includes(board.boardId);
     const boardsRef = firebase.database().ref('boards');
-    const starredRef = firebase.database().ref('starredBoards');
 
     const handleStarToggle = () => {
-      if(isStarred){
-        starredRef.child(currentUser.uid).child(board.boardId).remove();
+      if(board.isStarred){
+        boardsRef.child(currentUser.id).child(board.id).set({
+          ...board,
+          isStarred: false
+        })
       } else {
-        starredRef.child(currentUser.uid).child(board.boardId).set(true);
+        boardsRef.child(currentUser.id).child(board.id).set({
+          ...board,
+          isStarred: true
+        })
       }
     };
 
@@ -48,8 +51,8 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
         ...board,
         deleted: true
       };
-      boardsRef.child(currentUser.uid).child(board.boardId).set(updatedBoard);
-      history.push(Constants.buildUserURI(currentUser.uid))
+      boardsRef.child(currentUser.id).child(board.id).set(updatedBoard);
+      history.push(Constants.buildUserURI(currentUser.id))
     }
 
     const handleBoardTitleChange = (value: any) => {
@@ -58,7 +61,7 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
           ...board,
           name: value
         }
-        boardsRef.child(currentUser.uid).child(board.boardId).set(updatedBoard) 
+        boardsRef.child(currentUser.id).child(board.id).set(updatedBoard) 
       }
     }
 
@@ -97,7 +100,7 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
                     aria-label="star"
                     onClick={handleStarToggle}
                   >
-                    <StarIcon style={{ color: isStarred ? 'gold' : "white" }} />
+                    <StarIcon style={{ color: board.isStarred ? 'gold' : "white" }} />
                   </IconButton> 
                 </Avatar>
               </Grid>  

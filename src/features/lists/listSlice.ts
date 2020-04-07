@@ -1,14 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { List } from '../../models/index.models';
 
-const initialLists: any[] = [];
+interface ListsType {
+  byId?: any,
+  allIds?: any
+}
+
+const initialLists: any = {};
 
 const lists = createSlice({
   name: "lists",
   initialState: initialLists,
   reducers: {
     setCurrentLists(state, action) {
-      const lists: any[] = action.payload;
-      return lists;
+      const { byId, allIds } : ListsType = action.payload;
+      return {
+        byId,
+        allIds
+      };
     },
     clearCurrentLists(state) {
       return initialLists;

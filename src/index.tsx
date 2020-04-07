@@ -8,7 +8,6 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { setUser, clearUser } from './features/auth/authSlice';
 import { setBoards, clearBoards } from './features/boards/boardsSlice';
-import { setStarredBoards } from './features/boards/starredBoardsSlice';
 import * as Constants from './constants/index';
 import { Board } from './models/index.models'
 import * as Selectors from './selectors/index';
@@ -23,7 +22,6 @@ const Root: React.FC<RootProps> = ({ history }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const boardsRef = firebase.database().ref('boards');
-  const starredRef = firebase.database().ref('starredBoards');
   const isAuthenticated = useSelector(Selectors.isAuthenticated);
   const currentUser = useSelector(Selectors.getCurrentUser);
 
@@ -36,9 +34,9 @@ const Root: React.FC<RootProps> = ({ history }) => {
         dispatch(setUser({
           user: {
             email: user.email,
-            displayName: user.displayName,
+            name: user.displayName,
             photoURL: user.photoURL,
-            uid: user.uid
+            id: user.uid
           }
         }));
         if ([Constants.URLS.INDEX, Constants.URLS.LOGIN].includes(history.location.pathname)) {
@@ -56,27 +54,21 @@ const Root: React.FC<RootProps> = ({ history }) => {
   useEffect(() => {
     if (isAuthenticated){
       setLoading(true);
-      boardsRef.child(currentUser.uid).on('value', snap => {
+      boardsRef.child(currentUser.id).on('value', snap => {
         const loadedBoards: Board[] = [];
         if (snap.val()) {
           Object.entries(snap.val()).forEach(([key, value]: [string, any]) => {
             if(!value.deleted){ 
               loadedBoards.push({
-                boardId: key,
+                id: key,
                 deleted: value.deleted || false,
                 ...value
               })
             }
           });
           dispatch(setBoards(loadedBoards));
-        }
-        starredRef.child(currentUser.uid).on('value', snap => {
-          if (snap.val()) {
-            const loadedStars = Object.keys(snap.val());
-            dispatch(setStarredBoards(loadedStars));
-          }
           setLoading(false);
-        })
+        }
       });
     }
   }, [isAuthenticated])

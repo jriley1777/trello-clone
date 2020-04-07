@@ -46,7 +46,7 @@ interface HeaderProps extends RouteComponentProps {
 
 const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
     const currentUser = useSelector(Selectors.getCurrentUser);
-    const { displayName, photoURL, uid } = currentUser;
+    const { name, photoURL, id } = currentUser;
 
     //menu functions
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -91,7 +91,7 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
                   >
                   <StyledIconButton
                     aria-label="home"
-                    onClick={() => history.push(Constants.buildUserURI(uid))}
+                    onClick={() => history.push(Constants.buildUserURI(id))}
                   >
                     <HomeIcon style={{ color: "white" }} />
                   </StyledIconButton> 
@@ -100,7 +100,7 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
             </Grid>
           </Grid>
           <Grid item xs={4}>
-            <AppTitle light to={Constants.buildUserURI(uid)} />
+            <AppTitle light to={Constants.buildUserURI(id)} />
           </Grid>
           <Grid item xs={4}>
             <Grid container direction="row" justify="flex-end">
@@ -112,7 +112,7 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
                     style={{ height: '2rem', margin: 0, padding: 0}}
                   >
                     <Avatar
-                      alt={displayName}
+                      alt={name}
                       src={photoURL}
                       style={{ height: "2rem", width: "2rem", margin: 0, padding: 0 }}
                     />
@@ -133,7 +133,7 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
                     horizontal: 'center',
                   }}
                 >
-                  <MenuItem disabled>{ currentUser.displayName }</MenuItem>
+                  <MenuItem disabled>{ name }</MenuItem>
                   <hr />
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>

@@ -14,6 +14,28 @@ const boards = createSlice({
     clearBoards(state){
       return initialBoards;
     },
+    starBoard(state, action) {
+      const id: Board['id'] = action.payload;
+      const updatedBoard: Board = state.find(board => board.id === id)!;
+      return [
+        ...state,
+        {
+          ...updatedBoard,
+          starred: false
+        }
+      ] 
+    },
+    unstarBoard(state, action) {
+      const id: Board['id'] = action.payload;
+      const updatedBoard: Board = state.find(board => board.id === id)!;
+      return [
+        ...state,
+        {
+          ...updatedBoard,
+          starred: false
+        }
+      ]
+    },
     updateBoard(state, action) {
       const updatedBoard: Board = action.payload;
       return [
@@ -24,6 +46,6 @@ const boards = createSlice({
   }
 });
 
-export const { setBoards, clearBoards, updateBoard } = boards.actions;
+export const { setBoards, clearBoards, updateBoard, starBoard, unstarBoard } = boards.actions;
 
 export default boards.reducer;
