@@ -9,7 +9,7 @@ import StarIcon from '@material-ui/icons/StarBorderRounded';
 import Hidden from '@material-ui/core/Hidden';
 
 import CreateBoardCard from '../components/CreateBoardButton/CreateBoardButton';
-import BoardCardList from '../components/BoardCardList/BoardCardList';
+import BoardTileList from '../components/BoardTileList/BoardTileList';
 import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
 import * as Selectors from '../selectors/index';
@@ -46,7 +46,7 @@ const UserHome: React.FC = () => {
         </Grid>
         <Grid item>
           <Grid container direction="row" spacing={2}>
-            <BoardCardList boards={recentItems} />
+            <BoardTileList boards={recentItems} />
           </Grid>
         </Grid>
       </>
@@ -66,7 +66,7 @@ const UserHome: React.FC = () => {
         </Grid>
         <Grid item>
           <Grid container direction="row" spacing={2}>
-            <BoardCardList boards={starredItems} />
+            <BoardTileList boards={starredItems} />
           </Grid>
         </Grid>
       </>
@@ -120,7 +120,7 @@ const UserHome: React.FC = () => {
           </Grid>
           <Grid item>
             <Grid container direction="row" spacing={2}>
-              <BoardCardList boards={boards} />
+              <BoardTileList boards={boards} />
               <Grid item>
                 <CreateBoardCard />
               </Grid> 

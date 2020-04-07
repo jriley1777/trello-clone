@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from "@material-ui/core/Grid";
-import BoardCard from '../BoardCard/BoardCard';
+import BoardTile from '../BoardTile/BoardTile';
 
 import { Board } from '../../models/index.models';
 
@@ -14,7 +14,7 @@ const BoardCardList:React.FC<BCListProps> = ({ boards }) => {
                 boards.map(board => {
                     return (
                       <Grid item key={board.name}>
-                        <BoardCard board={ board } />
+                        <BoardTile board={ board } />
                       </Grid>
                     );
                 })
