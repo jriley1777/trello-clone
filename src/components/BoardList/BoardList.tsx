@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import EditableTextField from '../EditableTextField/EditableTextField';
 import CreateItemButton from '../CreateItemButton/CreateItemButton';
+import BoardListCard from '../BoardListCard/BoardListCard';
 
 import * as Selectors from '../../selectors/index';
 
@@ -24,20 +25,6 @@ const StyledPaper = styled(Paper)`
     overflow-x: hidden !important;
     text-align: left !important;
     font-size: 0.85rem;
-`;
-
-const StyledCard = styled(Paper)`
-    background: white;
-    height: 60px;
-    display: flex;
-    flexGrow: 1;
-    padding: 12px;
-    // width: 15.5vw !important;
-
-    &:hover {
-        background: rgba(0,0,0,0.1);
-        cursor: pointer;
-    }
 `;
 
 const StyledGrid = styled(Grid)`
@@ -70,11 +57,8 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
     const renderCards = () => {
         if (list.cards) {
             return list.cards.map((card: any) => (
-                <Grid key={card.cardId} item style={{ marginBottom: '8px' }} xs={12}>
-                    <StyledCard
-                        elevation={1}>
-                        {card.name}
-                    </StyledCard>
+                <Grid item>
+                    <BoardListCard key={card.name} card={card} /> 
                 </Grid>
             )); 
         }
@@ -108,7 +92,8 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
                             }}
                             xs={12}
                             >
-                            {renderCards()}</StyledGrid>
+                            {renderCards()}
+                        </StyledGrid>
                     </Grid>
                     <Grid item>
                         <CreateItemButton
