@@ -26,10 +26,12 @@ const StyledCard = styled(Paper)`
     display: flex;
     flexGrow: 1;
     padding: 12px;
+    min-width: 226px;
     max-width: 16.5vw;
     margin: 4px 0 4px 0;
     font-weight: 600;
     word-wrap; wrap;
+    height: 40px;
 
     &:hover {
         background: rgba(0,0,0,0.1);
@@ -38,9 +40,8 @@ const StyledCard = styled(Paper)`
 `;
 
 const StyledAvatar = styled(Avatar)`
-    width: 1.7rem !important;
-    height: 1.7rem !important;
-    // margin-left: auto;
+    width: 1.3rem !important;
+    height: 1.3rem !important;
     border: 1px solid rgba(0,0,0,0.1);
 `;
 
@@ -76,22 +77,25 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
         console.log( value );
     }
 
-
     return (
         <>
             <StyledCard
                 onClick={handleClickOpen('paper')}
                 elevation={1}>
-                    <Grid container direction="column">
-                        <Grid item>{ card.name }</Grid>
-                        <Grid item>
-                            <Grid container direction="row">
-                                <StyledAvatar
-                                    style={{marginLeft:'auto'}}
-                                    src={currentUser.photoURL}/>
+                <Grid container direction="column" spacing={1}>
+                    <Grid item>
+                        <Grid container direction="row" alignItems="center">
+                            <Grid item xs={10}>{card.name}</Grid>
+                            <Grid item xs={2}>
+                                <Grid container direction="row">
+                                    <StyledAvatar
+                                        style={{ marginLeft: 'auto' }}
+                                        src={currentUser.photoURL} />
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
+                </Grid>
             </StyledCard>
 
             <Dialog
@@ -130,7 +134,7 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
                             </Grid>
                         </Grid>
                         <Grid item>
-                            <Grid container direction="row" spacing={2}>
+                            <Grid container direction="row" spacing={2} alignItems="center">
                                 <Grid item>
                                     <Typography variant="overline">
                                         Members:

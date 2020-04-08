@@ -12,7 +12,8 @@ import BoardListCard from '../BoardListCard/BoardListCard';
 import * as Selectors from '../../selectors/index';
 
 const StyledBLContainer = styled.div`
-    height: 85vh !important;
+    height: 95vh !important;
+    z-index: 1000 !important;
 `;
 
 const StyledPaper = styled(Paper)`
@@ -21,10 +22,12 @@ const StyledPaper = styled(Paper)`
     padding: 8px;
     margin-right: 8px;
     background: rgb(235,236,240) !important;
-    max-height: 80vh !important;
+    max-height: 85vh !important;
     overflow-x: hidden !important;
     text-align: left !important;
     font-size: 0.85rem;
+    width: 250px !important;
+    overflow: hidden;
 `;
 
 const StyledGrid = styled(Grid)`
@@ -36,6 +39,14 @@ const StyledGrid = styled(Grid)`
 const StyledTextField = styled(EditableTextField)`
     padding-left: 12px;
 `;
+
+const StyledCreateButton = styled(CreateItemButton)`
+    margin-top: 4px !important;
+    width: 100% !important;
+    height: 100%;
+    position: fixed;
+    bottom: 0;
+`
 
 interface BoardListProps {
     list: any
@@ -57,7 +68,7 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
     const renderCards = () => {
         if (list.cards) {
             let cards = Object.entries(list.cards).map(([key, value]: any) => ({ id: key, ...value }))
-            return cards.map((card: any, index: number) => (
+            return cards.map((card: any) => (
                 <Grid item key={card.id}>
                     <BoardListCard card={card} /> 
                 </Grid>
@@ -74,7 +85,7 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
                     justify="center"
                     alignItems="flex-start"
                     spacing={1}
-                >
+                    >
                     <Grid item>
                         <Grid container direction="row" justify="space-between" alignItems="center">
                             <Grid item xs={11}>
@@ -90,20 +101,23 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
                         </Grid>
                     </Grid>
                     <Grid item>
-                        <StyledGrid 
-                            container
-                            direction="column"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            style={{
-                                maxHeight: '50vh'
-                            }}
-                            >
-                            {renderCards()}
-                        </StyledGrid>
+                        <div style={{
+                            overflow: 'auto',
+                            maxHeight: '68vh'
+                            }}>
+                            <StyledGrid 
+                                container
+                                direction="column"
+                                justify="flex-start"
+                                alignItems="flex-start"
+                                xs={12}
+                                >
+                                {renderCards()}
+                            </StyledGrid >
+                        </div>
                     </Grid>
                     <Grid item>
-                        <CreateItemButton
+                        <StyledCreateButton
                             name='card'
                             buttonText='Add another card'
                             actionText='Add card'

@@ -32,6 +32,7 @@ const StyledAttribution = styled.div`
     left: 8px;
     color: white;
     font-weight: bold;
+    z-index: 0;
     & a {
       text-decoration: none;
       color: #ded;
@@ -122,6 +123,7 @@ const Board = () => {
             >
             {renderBoardLists(currentLists)}
             <CreateItemButton
+              stayActive
               name="list"
               onSubmit={handleListCreate}
               buttonText='Add a list'

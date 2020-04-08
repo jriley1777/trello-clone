@@ -74,7 +74,7 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
           alignItems="center"
           style={{ padding: "0 5px 0 5px" }}
         >
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Grid container 
               direction="row" 
               alignItems="center" 
@@ -106,7 +106,7 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
               </Grid>  
             </Grid>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Grid container direction="row" alignItems="center" justify="flex-end">
               <Grid item>
                 <Avatar

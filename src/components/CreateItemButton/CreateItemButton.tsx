@@ -13,7 +13,7 @@ const StyledButton = styled(ButtonBase)`
     background: rgba(255,255,255,0.5) !important;
     color: rgb(93,107,130) !important;
     font-size: 1rem !important;
-    width: 18vw !important;
+    width: 250px !important;
     margin: 0 !important;
     text-align: left;
     padding: 10px !important;
@@ -25,8 +25,9 @@ const StyledButton = styled(ButtonBase)`
 `;
 const StyledPaper = styled(Paper)`
     background: rgb(235,235,240);
-    width: 18vw !important;
+    width: 242px !important;
     padding: 4px !important;
+    height: 100% !important;
 `;
 
 interface CLButtonProps {
