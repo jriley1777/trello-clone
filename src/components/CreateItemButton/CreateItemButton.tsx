@@ -27,7 +27,6 @@ const StyledPaper = styled(Paper)`
     background: rgb(235,235,240);
     width: 242px !important;
     padding: 4px !important;
-    height: 100% !important;
 `;
 
 interface CLButtonProps {
