@@ -31,18 +31,14 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
     const history = useHistory();
     const currentUser = useSelector(Selectors.getCurrentUser);
     const boardsRef = firebase.database().ref('boards');
+    const starredRef = firebase.database().ref('boardStars');
+    const isStarred = useSelector(state => Selectors.isBoardStarred(state, board.id))
 
     const handleStarToggle = () => {
-      if(board.isStarred){
-        boardsRef.child(currentUser.id).child(board.id).set({
-          ...board,
-          isStarred: false
-        })
+      if(isStarred){
+        starredRef.child(currentUser.id).child(board.id).remove();
       } else {
-        boardsRef.child(currentUser.id).child(board.id).set({
-          ...board,
-          isStarred: true
-        })
+        starredRef.child(currentUser.id).child(board.id).set(true);
       }
     };
 
@@ -100,7 +96,7 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
                     aria-label="star"
                     onClick={handleStarToggle}
                   >
-                    <StarIcon style={{ color: board.isStarred ? 'gold' : "white" }} />
+                    <StarIcon style={{ color: isStarred ? 'gold' : "white" }} />
                   </IconButton> 
                 </Avatar>
               </Grid>  

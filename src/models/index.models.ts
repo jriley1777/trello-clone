@@ -13,20 +13,21 @@ export interface Board {
   id: string;
   name: string;
   deleted: boolean;
-  isStarred: boolean;
   bg: {
     media: any;
     color: string;
   };
+  lists: List['id'][];
 }
 
 export interface List {
-    createdAt: number;
-    lastUpdated: number;
-    createdBy: User["id"];
-    board: Board["id"];
-    name: string;
-    id: string;
+  createdAt: number;
+  lastUpdated: number;
+  createdBy: User["id"];
+  board: Board["id"];
+  name: string;
+  id: string;
+  cards: Card['id'][];
 }
 
 export interface Card {
@@ -38,4 +39,16 @@ export interface Card {
   list: List["id"];
   id: string;
   name: string;
+  cardItems: CardItem['id'][];
+}
+
+
+export interface CardItem {
+  lastAccessTime?: number;
+  createdAt: number;
+  lastUpdated: number;
+  createdBy: User["id"];
+  id: string;
+  value: string;
+  isComplete: boolean;
 }

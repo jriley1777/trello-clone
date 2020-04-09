@@ -28,7 +28,6 @@ const CreateCard = () => {
             createdAt: firebase.database.ServerValue.TIMESTAMP,
             lastUpdated: firebase.database.ServerValue.TIMESTAMP,
             deleted: false,
-            isStarred: false,
             bg: {
                 color: DEFAULT_BOARD_COLOR,
                 media: {}

@@ -42,6 +42,7 @@ interface BoardProps extends RouteComponentProps {
 }
 
 const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
+  const isStarred = useSelector(state => Selectors.isBoardStarred(state, board.id));
   const handleActionLink = (e: any) => {
     e.preventDefault();
     history.push(Constants.buildBoardURI(board.id));
@@ -73,8 +74,8 @@ const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
             right: '4px', 
             }}>
           <StarIcon style={{ 
-            color: board.isStarred ? 'gold' : 'white',
-            display: board.isStarred ? 'inline-block' : 'none'
+            color: isStarred ? 'gold' : 'white',
+            display: isStarred ? 'inline-block' : 'none'
             }}/> 
         </div>
       </CardActionArea>

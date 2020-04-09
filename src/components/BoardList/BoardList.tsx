@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import firebase from '../../utils/firebase';
+import firebase, { DB_REFS } from '../../utils/firebase';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -10,6 +10,7 @@ import CreateItemButton from '../CreateItemButton/CreateItemButton';
 import BoardListCard from '../BoardListCard/BoardListCard';
 
 import * as Selectors from '../../selectors/index';
+import * as Types from '../../models/index.models';
 
 const StyledBLContainer = styled.div`
     height: 95vh !important;
@@ -53,22 +54,30 @@ interface BoardListProps {
 };
 
 const BoardList: React.FC<BoardListProps> = ({ list }) => {
-    const listsRef = firebase.database().ref('lists');
-    const currentBoard = useSelector(Selectors.getCurrentBoard)
+    const listsRef = DB_REFS.lists;
+    const cardsRef = DB_REFS.cards;
+    const currentUser = useSelector(Selectors.getCurrentUser);
+    const currentBoard = useSelector(Selectors.getCurrentBoard);
+    const cards = useSelector(state => Selectors.getCardsByList(state, list.id));
+    console.log(cards);
     const handleListNameChange = (value: any) => {
         if (value !== list.name) {
             listsRef.child(currentBoard).child(list.id).set({ ...list, name: value })
         }
     }
     const handleCardCreate = (card: { card: string}) => {
-        listsRef.child(currentBoard).child(list.id).child('cards').push().set({
-            name: card.card
+        cardsRef.child(currentBoard).push().set({
+            lastUpdated: firebase.database.ServerValue.TIMESTAMP,
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+            createdBy: currentUser.id,
+            name: card.card,
+            board: currentBoard,
+            list: list.id
         });
     }
-    const renderCards = () => {
-        if (list.cards) {
-            let cards = Object.entries(list.cards).map(([key, value]: any) => ({ id: key, ...value }))
-            return cards.map((card: any) => (
+    const renderCards = (cards: any) => {
+        if (cards.length > 0) {
+            return cards.map((card: Types.Card) => (
                 <Grid item key={card.id}>
                     <BoardListCard card={card} /> 
                 </Grid>
@@ -105,14 +114,13 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
                             overflow: 'auto',
                             maxHeight: '68vh'
                             }}>
-                            <StyledGrid 
+                            <StyledGrid
                                 container
                                 direction="column"
                                 justify="flex-start"
                                 alignItems="flex-start"
-                                xs={12}
                                 >
-                                {renderCards()}
+                                {renderCards(cards)}
                             </StyledGrid >
                         </div>
                     </Grid>

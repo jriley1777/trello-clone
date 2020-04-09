@@ -13,7 +13,7 @@ const BoardCardList:React.FC<BCListProps> = ({ boards }) => {
             {
                 boards.map(board => {
                     return (
-                      <Grid item key={board.name}>
+                      <Grid item key={board.id}>
                         <BoardTile board={ board } />
                       </Grid>
                     );

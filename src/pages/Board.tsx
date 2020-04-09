@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import firebase from '../utils/firebase';
+import firebase, { DB_REFS } from '../utils/firebase';
 
 import GridList from '@material-ui/core/GridList';
 import AppHeader from '../components/AppHeader/AppHeader';
@@ -11,7 +11,8 @@ import CreateItemButton from '../components/CreateItemButton/CreateItemButton';
 import BoardList from '../components/BoardList/BoardList';
 
 import * as Selectors from '../selectors/index';
-import { setCurrentLists, clearCurrentLists } from '../features/lists/listSlice';
+import { setLists, clearLists } from '../features/lists/listSlice';
+import { setCards, clearCards } from '../features/lists/cardsSlice';
 import { setCurrentBoard } from '../features/boards/currentBoardSlice';
 import { Board as BoardType } from '../models/index.models';
 
@@ -49,9 +50,10 @@ const Board = () => {
     const boards = useSelector(Selectors.getBoards);
     const currentUser = useSelector(Selectors.getCurrentUser);
     const board = boards.find(x => x.id === boardId)!;
-    document.title = `${board.name} | Taskboard`;
-    const boardsRef = firebase.database().ref('boards');
-    const listsRef = firebase.database().ref('lists');
+    document.title = `${board.name} | Tdaskboard`;
+    const boardsRef = DB_REFS.boards;
+    const listsRef = DB_REFS.lists;
+    const cardsRef = DB_REFS.cards;
     const currentLists = useSelector(Selectors.getLists);
 
     useEffect(() => {
@@ -63,14 +65,35 @@ const Board = () => {
       boardsRef.child(currentUser.id).child(boardId!).set(updatedBoard);
       listsRef.child(boardId!).on('value', snap => {
         if(snap.val()){
-          let loadedLists: any = { byId: snap.val() };
-          loadedLists.allIds = Object.keys(snap.val());
-          dispatch(setCurrentLists(loadedLists));
+          let allIds = Object.keys(snap.val());
+          let byId: any = {};
+          allIds.forEach(id => {
+            byId[id] = snap.val()[id];
+            byId[id].id = id;
+          })
+          let loaded: any = { byId, allIds };
+          dispatch(setLists(loaded));
+        } else {
+          dispatch(clearLists());
+        }
+      });
+      cardsRef.child(boardId!).on('value', snap => {
+        if (snap.val()) {
+          let allIds = Object.keys(snap.val());
+          let byId: any = {};
+          allIds.forEach(id => {
+            byId[id] = snap.val()[id];
+            byId[id].id = id;
+          })
+          let loaded: any = { byId, allIds };
+          dispatch(setCards(loaded));
+        } else {
+          dispatch(clearCards())
         }
       })
       return () => {
         listsRef.child(boardId!).off('value');
-        dispatch(clearCurrentLists());
+        dispatch(clearLists());
       }
     }, [])
 

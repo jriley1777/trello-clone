@@ -6,25 +6,25 @@ interface ListsType {
   allIds?: any
 }
 
-const initialLists: any = {};
+const initialLists: ListsType = {};
 
 const lists = createSlice({
   name: "lists",
   initialState: initialLists,
   reducers: {
-    setCurrentLists(state, action) {
+    setLists(state, action) {
       const { byId, allIds } : ListsType = action.payload;
       return {
         byId,
         allIds
       };
     },
-    clearCurrentLists(state) {
+    clearLists(state) {
       return initialLists;
     },
   },
 });
 
-export const { setCurrentLists, clearCurrentLists } = lists.actions;
+export const { setLists, clearLists } = lists.actions;
 
 export default lists.reducer;

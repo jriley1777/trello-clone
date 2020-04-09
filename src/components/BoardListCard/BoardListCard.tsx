@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import firebase from '../../utils/firebase';
+import firebase, { DB_REFS } from '../../utils/firebase';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -51,6 +51,10 @@ interface BLCProps {
 
 const BoardListCard: React.FC<BLCProps> = ({ card }) => {
     const currentUser = useSelector(Selectors.getCurrentUser);
+    const currentBoard = useSelector(Selectors.getCurrentBoard);
+    const cardsRef = DB_REFS.cards;
+
+
     const [open, setOpen] = React.useState(false);
     const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
 
@@ -74,7 +78,10 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
     }, [open]);
 
     const handleCardNameChange = (value: string) => {
-        console.log( value );
+        cardsRef.child(currentBoard).child(card.id).set({
+            ...card,
+            name: value
+        })
     }
 
     return (
