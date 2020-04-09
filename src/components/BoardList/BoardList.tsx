@@ -59,7 +59,6 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
     const currentUser = useSelector(Selectors.getCurrentUser);
     const currentBoard = useSelector(Selectors.getCurrentBoard);
     const cards = useSelector(state => Selectors.getCardsByList(state, list.id));
-    console.log(cards);
     const handleListNameChange = (value: any) => {
         if (value !== list.name) {
             listsRef.child(currentBoard).child(list.id).set({ ...list, name: value })

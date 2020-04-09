@@ -29,10 +29,11 @@ interface ETProps {
     name: string,
     value: string,
     onSubmit: (...args: any) => any,
+    placeholder?: string,
     style?: React.CSSProperties
 }
 
-const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style, ...props }) => {
+const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, placeholder, style, ...props }) => {
     const [editing, setEditing] = useState(false);
     const [ text, setText ] = useState(value);
     const handleSubmit = () => {
@@ -49,6 +50,7 @@ const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style, ..
                 autoFocus
                 name={name}
                 value={text}
+                placeholder={placeholder}
                 onChange={handleChange}
                 onBlur={handleSubmit}
                 style={style}
@@ -61,7 +63,7 @@ const EditableTextField: React.FC<ETProps> = ({ name, value, onSubmit, style, ..
             style={style}
             {...props}
             >
-            { value }
+            { value || placeholder }
         </StyledSpan>
     )
 };

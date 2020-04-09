@@ -8,6 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import EditableTextField from '../EditableTextField/EditableTextField';
+import CreateItemButton from '../CreateItemButton/CreateItemButton';
 
 import WebIcon from '@material-ui/icons/Web';
 import IconButton from '@material-ui/core/IconButton';
@@ -45,6 +46,10 @@ const StyledAvatar = styled(Avatar)`
     border: 1px solid rgba(0,0,0,0.1);
 `;
 
+const StyledDialogContent = styled(DialogContent)`
+    height: 66vh !important;
+`;
+
 interface BLCProps {
     card: any
 }
@@ -53,9 +58,10 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
     const currentUser = useSelector(Selectors.getCurrentUser);
     const currentBoard = useSelector(Selectors.getCurrentBoard);
     const cardsRef = DB_REFS.cards;
+    const cardItemsRef = DB_REFS.cardItems;
 
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
     const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
 
     const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
@@ -83,6 +89,24 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
             name: value
         })
     }
+    const handleCardDescChange = (value: string) => {
+        cardsRef.child(currentBoard).child(card.id).set({
+            ...card,
+            description: value
+        })
+    }
+    const handleCardItemCreate = (value: { checklistItem: string}) => {
+        cardItemsRef.child(currentBoard).push().set({
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+            updatedAt: firebase.database.ServerValue.TIMESTAMP,
+            createdBy: currentUser.id,
+            name: value.checklistItem,
+            card: card.id,
+            list: card.list,
+            board: currentBoard
+        })
+    }
+
 
     return (
         <>
@@ -107,6 +131,8 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
 
             <Dialog
                 open={open}
+                fullWidth
+                maxWidth={'sm'}
                 onClose={handleClose}
                 scroll={scroll}
                 aria-labelledby="scroll-dialog-title"
@@ -153,24 +179,49 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
                                 </Grid>
                             </Grid>
                         </Grid>
+                        <Grid item>
+                            <Grid container direction="row" spacing={2} alignItems="center">
+                                <Grid item>
+                                    <Typography variant="overline">
+                                        Description:
+                                    </Typography>
+                                </Grid>
+                                <Grid item>
+                                    <EditableTextField 
+                                        style={{fontSize:'0.9rem'}}
+                                        value={card.description}
+                                        placeholder='Enter a description'
+                                        name='description'
+                                        onSubmit={handleCardDescChange}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </DialogTitle>
-                <DialogContent dividers={scroll === 'paper'}>
-                    <DialogContentText
-                        id="scroll-dialog-description"
-                        ref={descriptionElementRef}
-                        tabIndex={-1}
-                    >
-                        {[...new Array(50)]
-                            .map(
-                                () => `Cras mattis consectetur purus sit amet fermentum.
-                                    Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-                                    Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-                                    Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-                            )
-                            .join('\n')}
-                    </DialogContentText>
-                </DialogContent>
+                <StyledDialogContent dividers={scroll === 'paper'}>
+                    <Grid container direction="column" justify="flex-start" spacing={1}>
+                        <Grid item>
+                            <DialogContentText
+                                id="scroll-dialog-description"
+                                ref={descriptionElementRef}
+                                tabIndex={-1}
+                            >
+                                <Typography variant="overline" style={{ color: 'black' }}>
+                                    Checklist:
+                                </Typography>
+                            </DialogContentText>
+                        </Grid>
+                        <Grid item>
+                            <CreateItemButton
+                                name='checklistItem'
+                                onSubmit={handleCardItemCreate}
+                                actionText='Add to do'
+                                buttonText='Add an item'
+                            />  
+                        </Grid>
+                    </Grid>
+                </StyledDialogContent>
             </Dialog>
         </>
     )
