@@ -33,5 +33,23 @@ import "firebase/database";
     }
   }
 
+  export const DB_TABLES = {
+    users: 'users',
+    starredBoards: 'boardStars',
+    boards: 'boards',
+    lists: 'lists',
+    cards: 'cards',
+    cardItems: 'cardItems'
+  }
+
+  export const DB_REFS = {
+    users: firebase.database().ref(DB_TABLES.users),
+    starredBoards: firebase.database().ref(DB_TABLES.starredBoards),
+    boards: firebase.database().ref(DB_TABLES.boards),
+    lists: firebase.database().ref(DB_TABLES.lists),
+    cards: firebase.database().ref(DB_TABLES.cards),
+    cardItems: firebase.database().ref(DB_TABLES.cardItems),
+  };
+
 
   export default firebase;

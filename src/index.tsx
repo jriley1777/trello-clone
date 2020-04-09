@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, withRouter,  } from "react-router-dom";
-import firebase from './utils/firebase';
+import firebase, {DB_REFS} from './utils/firebase';
 import './index.css';
 import App from './app/App';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { setUser, clearUser } from './features/auth/authSlice';
 import { setBoards, clearBoards } from './features/boards/boardsSlice';
-import { setStarredBoards } from './features/boards/starredBoardsSlice';
+import { setBoardStars, clearBoardStars } from './features/boards/starsSlice';
 import * as Constants from './constants/index';
-import { Board } from './models/index.models'
 import * as Selectors from './selectors/index';
 
 import store from './utils/redux';
@@ -22,8 +21,8 @@ const Root: React.FC<RootProps> = ({ history }) => {
   document.title = "Taskboard";
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const boardsRef = firebase.database().ref('boards');
-  const starredRef = firebase.database().ref('starredBoards');
+  const boardsRef = DB_REFS.boards;
+  const starredRef = DB_REFS.starredBoards;
   const isAuthenticated = useSelector(Selectors.isAuthenticated);
   const currentUser = useSelector(Selectors.getCurrentUser);
 
@@ -36,9 +35,9 @@ const Root: React.FC<RootProps> = ({ history }) => {
         dispatch(setUser({
           user: {
             email: user.email,
-            displayName: user.displayName,
+            name: user.displayName,
             photoURL: user.photoURL,
-            uid: user.uid
+            id: user.uid
           }
         }));
         if ([Constants.URLS.INDEX, Constants.URLS.LOGIN].includes(history.location.pathname)) {
@@ -46,7 +45,7 @@ const Root: React.FC<RootProps> = ({ history }) => {
         }
         setLoading(false);
       } else {
-        dispatch(clearUser())
+        dispatch(clearUser());
         dispatch(clearBoards());
         setLoading(false);
       }
@@ -56,30 +55,31 @@ const Root: React.FC<RootProps> = ({ history }) => {
   useEffect(() => {
     if (isAuthenticated){
       setLoading(true);
-      boardsRef.child(currentUser.uid).on('value', snap => {
-        const loadedBoards: Board[] = [];
+      starredRef.child(currentUser.id).on('value', snap => {
         if (snap.val()) {
-          Object.entries(snap.val()).forEach(([key, value]: [string, any]) => {
-            if(!value.deleted){ 
-              loadedBoards.push({
-                boardId: key,
-                deleted: value.deleted || false,
-                ...value
-              })
-            }
-          });
-          dispatch(setBoards(loadedBoards));
+          let loaded: string[] = Object.keys(snap.val());
+          dispatch(setBoardStars(loaded));
+        } else {
+          dispatch(clearBoardStars());
         }
-        starredRef.child(currentUser.uid).on('value', snap => {
-          if (snap.val()) {
-            const loadedStars = Object.keys(snap.val());
-            dispatch(setStarredBoards(loadedStars));
-          }
+      });
+      boardsRef.child(currentUser.id).on('value', snap => {
+        if (snap.val()) {
+          let allIds = Object.keys(snap.val()).filter(x => snap.val()[x].deleted === false);
+          let byId:any = {};
+          allIds.forEach(id => {
+            byId[id] = snap.val()[id];
+            byId[id].id = id;
+          })
+          let loaded: any = { byId, allIds };
+          dispatch(setBoards(loaded));
           setLoading(false);
-        })
+        } else {
+          dispatch(clearBoards());
+        }
       });
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated]);
 
   return !loading ? <App /> : null;
 };
