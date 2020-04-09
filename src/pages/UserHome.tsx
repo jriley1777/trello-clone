@@ -9,7 +9,7 @@ import StarIcon from '@material-ui/icons/StarBorderRounded';
 import Hidden from '@material-ui/core/Hidden';
 
 import CreateBoardCard from '../components/CreateBoardButton/CreateBoardButton';
-import BoardCardList from '../components/BoardCardList/BoardCardList';
+import BoardTileList from '../components/BoardTileList/BoardTileList';
 import Placeholder from '../components/Placeholder/Placeholder';
 import AppHeader from '../components/AppHeader/AppHeader';
 import * as Selectors from '../selectors/index';
@@ -27,11 +27,13 @@ const PageWrapper = styled.div.attrs({
 const UserHome: React.FC = () => {
   document.title = "Boards | Taskboard";
   const boards = useSelector(Selectors.getBoards);
-  const starredItems: any = useSelector(Selectors.getStarredBoards);
-  const starredBoards = boards.filter(x => starredItems.includes(x.boardId))
-  const recentBoards = boards.filter(x => {
-    return x.lastAccessTime && (new Date().getTime() - x.lastAccessTime) < 3600000;
-  }).sort((a, b) =>  b.lastAccessTime > a.lastAccessTime ? 1 : -1).slice(0, 4); 
+  const starredBoards = useSelector(Selectors.getStarredBoards);
+  const accessedBoards = boards.filter(board => {
+    return board.lastAccessTime && (new Date().getTime() - board.lastAccessTime) < 3600000;
+  });
+  const recentBoards = accessedBoards.length > 0 ? 
+    accessedBoards.sort((a, b) =>  b.lastAccessTime! > a.lastAccessTime! ? 1 : -1).slice(0, 4) :
+  [];
 
   const renderRecentItems = (recentItems: any) => {
     return recentItems.length > 0 ? (
@@ -46,7 +48,7 @@ const UserHome: React.FC = () => {
         </Grid>
         <Grid item>
           <Grid container direction="row" spacing={2}>
-            <BoardCardList boards={recentItems} />
+            <BoardTileList boards={recentItems} />
           </Grid>
         </Grid>
       </>
@@ -66,7 +68,7 @@ const UserHome: React.FC = () => {
         </Grid>
         <Grid item>
           <Grid container direction="row" spacing={2}>
-            <BoardCardList boards={starredItems} />
+            <BoardTileList boards={starredItems} />
           </Grid>
         </Grid>
       </>
@@ -120,7 +122,7 @@ const UserHome: React.FC = () => {
           </Grid>
           <Grid item>
             <Grid container direction="row" spacing={2}>
-              <BoardCardList boards={boards} />
+              <BoardTileList boards={boards} />
               <Grid item>
                 <CreateBoardCard />
               </Grid> 

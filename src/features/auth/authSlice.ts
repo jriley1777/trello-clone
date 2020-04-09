@@ -1,17 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { User } from '../../models/index.models';
 
-interface User {
-    email: string,
-    displayName: string,
-    photoURL?: string,
-    uid: string
-};
-
-const initialUser: User= {
+const initialUser: User = {
+  id: '',
   email: '',
-  displayName: '',
-  photoURL: '',
-  uid: ''
+  name: '',
+  photoURL: ''
 }
 
 const auth = createSlice({

@@ -1,16 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import firebase from '../../utils/firebase';
+import firebase, { DB_REFS } from '../../utils/firebase';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import EditableTextField from '../EditableTextField/EditableTextField';
 import CreateItemButton from '../CreateItemButton/CreateItemButton';
+import BoardListCard from '../BoardListCard/BoardListCard';
 
 import * as Selectors from '../../selectors/index';
+import * as Types from '../../models/index.models';
 
 const StyledBLContainer = styled.div`
-    height: 85vh !important;
+    height: 95vh !important;
+    z-index: 1000 !important;
 `;
 
 const StyledPaper = styled(Paper)`
@@ -19,25 +23,12 @@ const StyledPaper = styled(Paper)`
     padding: 8px;
     margin-right: 8px;
     background: rgb(235,236,240) !important;
-    // width: 17vw !important;
-    max-height: 80vh !important;
+    max-height: 85vh !important;
     overflow-x: hidden !important;
     text-align: left !important;
     font-size: 0.85rem;
-`;
-
-const StyledCard = styled(Paper)`
-    background: white;
-    height: 60px;
-    display: flex;
-    flexGrow: 1;
-    padding: 12px;
-    // width: 15.5vw !important;
-
-    &:hover {
-        background: rgba(0,0,0,0.1);
-        cursor: pointer;
-    }
+    width: 250px !important;
+    overflow: hidden;
 `;
 
 const StyledGrid = styled(Grid)`
@@ -50,31 +41,45 @@ const StyledTextField = styled(EditableTextField)`
     padding-left: 12px;
 `;
 
+const StyledCreateButton = styled(CreateItemButton)`
+    margin-top: 4px !important;
+    width: 100% !important;
+    height: 100%;
+    position: fixed;
+    bottom: 0;
+`
+
 interface BoardListProps {
     list: any
 };
 
 const BoardList: React.FC<BoardListProps> = ({ list }) => {
-    const listsRef = firebase.database().ref('lists');
-    const currentBoard = useSelector(Selectors.getCurrentBoard)
+    const listsRef = DB_REFS.lists;
+    const cardsRef = DB_REFS.cards;
+    const currentUser = useSelector(Selectors.getCurrentUser);
+    const currentBoard = useSelector(Selectors.getCurrentBoard);
+    const cards = useSelector(state => Selectors.getCardsByList(state, list.id));
+    console.log(cards);
     const handleListNameChange = (value: any) => {
         if (value !== list.name) {
-            listsRef.child(currentBoard).child(list.listId).set({ ...list, name: value })
+            listsRef.child(currentBoard).child(list.id).set({ ...list, name: value })
         }
     }
     const handleCardCreate = (card: { card: string}) => {
-        listsRef.child(currentBoard).child(list.listId).child('cards').push().set({
-            name: card.card
+        cardsRef.child(currentBoard).push().set({
+            lastUpdated: firebase.database.ServerValue.TIMESTAMP,
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+            createdBy: currentUser.id,
+            name: card.card,
+            board: currentBoard,
+            list: list.id
         });
     }
-    const renderCards = () => {
-        if (list.cards) {
-            return list.cards.map((card: any) => (
-                <Grid key={card.cardId} item style={{ marginBottom: '8px' }} xs={12}>
-                    <StyledCard
-                        elevation={1}>
-                        {card.name}
-                    </StyledCard>
+    const renderCards = (cards: any) => {
+        if (cards.length > 0) {
+            return cards.map((card: Types.Card) => (
+                <Grid item key={card.id}>
+                    <BoardListCard card={card} /> 
                 </Grid>
             )); 
         }
@@ -89,29 +94,38 @@ const BoardList: React.FC<BoardListProps> = ({ list }) => {
                     justify="center"
                     alignItems="flex-start"
                     spacing={1}
-                >
+                    >
                     <Grid item>
-                        <StyledTextField
-                            name='listName'
-                            value={list.name}
-                            onSubmit={handleListNameChange}
-                        />
+                        <Grid container direction="row" justify="space-between" alignItems="center">
+                            <Grid item xs={11}>
+                                <StyledTextField
+                                    name='listName'
+                                    value={list.name}
+                                    onSubmit={handleListNameChange}
+                                />
+                            </Grid>
+                            <Grid item xs={1}>
+                                <MoreHorizIcon fontSize="small"/>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item>
-                        <StyledGrid 
-                            container
-                            direction="column"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            style={{
-                                maxHeight: '50vh'
-                            }}
-                            xs={12}
-                            >
-                            {renderCards()}</StyledGrid>
+                        <div style={{
+                            overflow: 'auto',
+                            maxHeight: '68vh'
+                            }}>
+                            <StyledGrid
+                                container
+                                direction="column"
+                                justify="flex-start"
+                                alignItems="flex-start"
+                                >
+                                {renderCards(cards)}
+                            </StyledGrid >
+                        </div>
                     </Grid>
                     <Grid item>
-                        <CreateItemButton
+                        <StyledCreateButton
                             name='card'
                             buttonText='Add another card'
                             actionText='Add card'

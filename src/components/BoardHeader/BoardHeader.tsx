@@ -29,17 +29,16 @@ interface BoardHeaderProps {
 
 const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
     const history = useHistory();
-    const starred = useSelector(Selectors.getStarredBoards);
     const currentUser = useSelector(Selectors.getCurrentUser);
-    const isStarred = starred.includes(board.boardId);
     const boardsRef = firebase.database().ref('boards');
-    const starredRef = firebase.database().ref('starredBoards');
+    const starredRef = firebase.database().ref('boardStars');
+    const isStarred = useSelector(state => Selectors.isBoardStarred(state, board.id))
 
     const handleStarToggle = () => {
       if(isStarred){
-        starredRef.child(currentUser.uid).child(board.boardId).remove();
+        starredRef.child(currentUser.id).child(board.id).remove();
       } else {
-        starredRef.child(currentUser.uid).child(board.boardId).set(true);
+        starredRef.child(currentUser.id).child(board.id).set(true);
       }
     };
 
@@ -48,8 +47,8 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
         ...board,
         deleted: true
       };
-      boardsRef.child(currentUser.uid).child(board.boardId).set(updatedBoard);
-      history.push(Constants.buildUserURI(currentUser.uid))
+      boardsRef.child(currentUser.id).child(board.id).set(updatedBoard);
+      history.push(Constants.buildUserURI(currentUser.id))
     }
 
     const handleBoardTitleChange = (value: any) => {
@@ -58,7 +57,7 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
           ...board,
           name: value
         }
-        boardsRef.child(currentUser.uid).child(board.boardId).set(updatedBoard) 
+        boardsRef.child(currentUser.id).child(board.id).set(updatedBoard) 
       }
     }
 
@@ -71,7 +70,7 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
           alignItems="center"
           style={{ padding: "0 5px 0 5px" }}
         >
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Grid container 
               direction="row" 
               alignItems="center" 
@@ -103,7 +102,7 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({ board }) => {
               </Grid>  
             </Grid>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Grid container direction="row" alignItems="center" justify="flex-end">
               <Grid item>
                 <Avatar

@@ -42,13 +42,10 @@ interface BoardProps extends RouteComponentProps {
 }
 
 const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
-  const { name, boardId } = board;
-  const starred = useSelector(Selectors.getStarredBoards);
-  const isStarred = starred.includes(board.boardId);
-
+  const isStarred = useSelector(state => Selectors.isBoardStarred(state, board.id));
   const handleActionLink = (e: any) => {
     e.preventDefault();
-    history.push(Constants.buildBoardURI(boardId));
+    history.push(Constants.buildBoardURI(board.id));
   };
 
   const renderMedia = () => {
@@ -61,14 +58,14 @@ const BoardCard: React.FC<BoardProps> = ({ board, history }) => {
     <StyledCard bg={board.bg} title={board.name}>
       <CardActionArea
         style={{ height: "100%" }}
-        href={Constants.buildBoardURI(boardId)}
+        href={Constants.buildBoardURI(board.id)}
         onClick={handleActionLink}
       >
         {renderMedia()}
         <CardContent
           style={{ position: "absolute", top: "0", left: "0", padding: "8px" }}
         >
-          <h4 style={{margin: 0}}>{name}</h4>
+          <h4 style={{margin: 0}}>{board.name}</h4>
         </CardContent>
         <div 
           style={{ 

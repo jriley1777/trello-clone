@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import firebase from '../utils/firebase';
+import firebase, { DB_REFS } from '../utils/firebase';
 
 import GridList from '@material-ui/core/GridList';
 import AppHeader from '../components/AppHeader/AppHeader';
@@ -11,7 +11,8 @@ import CreateItemButton from '../components/CreateItemButton/CreateItemButton';
 import BoardList from '../components/BoardList/BoardList';
 
 import * as Selectors from '../selectors/index';
-import { setCurrentLists, clearCurrentLists } from '../features/lists/listSlice';
+import { setLists, clearLists } from '../features/lists/listSlice';
+import { setCards, clearCards } from '../features/lists/cardsSlice';
 import { setCurrentBoard } from '../features/boards/currentBoardSlice';
 import { Board as BoardType } from '../models/index.models';
 
@@ -32,6 +33,7 @@ const StyledAttribution = styled.div`
     left: 8px;
     color: white;
     font-weight: bold;
+    z-index: 0;
     & a {
       text-decoration: none;
       color: #ded;
@@ -47,11 +49,12 @@ const Board = () => {
     const { boardId } = useParams();
     const boards = useSelector(Selectors.getBoards);
     const currentUser = useSelector(Selectors.getCurrentUser);
-    const board = boards.find(x => x.boardId === boardId)!;
-    document.title = `${board.name} | Taskboard`;
-    const boardsRef = firebase.database().ref('boards');
-    const listsRef = firebase.database().ref('lists');
-    const currentLists = useSelector(Selectors.getCurrentLists);
+    const board = boards.find(x => x.id === boardId)!;
+    document.title = `${board.name} | Tdaskboard`;
+    const boardsRef = DB_REFS.boards;
+    const listsRef = DB_REFS.lists;
+    const cardsRef = DB_REFS.cards;
+    const currentLists = useSelector(Selectors.getLists);
 
     useEffect(() => {
       dispatch(setCurrentBoard(boardId));
@@ -59,26 +62,38 @@ const Board = () => {
         ...board,
         lastAccessTime: firebase.database.ServerValue.TIMESTAMP
       }
-      boardsRef.child(currentUser.uid).child(boardId!).set(updatedBoard);
+      boardsRef.child(currentUser.id).child(boardId!).set(updatedBoard);
       listsRef.child(boardId!).on('value', snap => {
         if(snap.val()){
-          const loadedLists: any = [];
-          Object.entries(snap.val()).forEach(([key, value]: [string, any]) => {
-            loadedLists.push({
-              listId: key,
-              name: value.name,
-              cards: value.cards && Object.entries(value.cards).map(([key, value]: any) => ({
-                cardId: key,
-                name: value.name
-              })) || []
-            })
-          });
-          dispatch(setCurrentLists(loadedLists));
+          let allIds = Object.keys(snap.val());
+          let byId: any = {};
+          allIds.forEach(id => {
+            byId[id] = snap.val()[id];
+            byId[id].id = id;
+          })
+          let loaded: any = { byId, allIds };
+          dispatch(setLists(loaded));
+        } else {
+          dispatch(clearLists());
+        }
+      });
+      cardsRef.child(boardId!).on('value', snap => {
+        if (snap.val()) {
+          let allIds = Object.keys(snap.val());
+          let byId: any = {};
+          allIds.forEach(id => {
+            byId[id] = snap.val()[id];
+            byId[id].id = id;
+          })
+          let loaded: any = { byId, allIds };
+          dispatch(setCards(loaded));
+        } else {
+          dispatch(clearCards())
         }
       })
       return () => {
         listsRef.child(boardId!).off('value');
-        dispatch(clearCurrentLists());
+        dispatch(clearLists());
       }
     }, [])
 
@@ -95,12 +110,15 @@ const Board = () => {
 
     const renderBoardLists = (lists: any[]) => {
       return lists.map(list => (
-        <BoardList key={list.listId} list={list} />
+        <BoardList key={list.id} list={list} />
       ))
     }
 
     const handleListCreate = (list: {list: string}) => {
       listsRef.child(boardId!).push().set({
+        createdAt: firebase.database.ServerValue.TIMESTAMP,
+        lastUpdatedAt: firebase.database.ServerValue.TIMESTAMP,
+        createdBy: currentUser.id,
         name: list.list
       });
     }
@@ -112,7 +130,6 @@ const Board = () => {
         <div
           style={{
             display: 'flex',
-
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
             alignItems: 'flex-start',
@@ -129,6 +146,7 @@ const Board = () => {
             >
             {renderBoardLists(currentLists)}
             <CreateItemButton
+              stayActive
               name="list"
               onSubmit={handleListCreate}
               buttonText='Add a list'
