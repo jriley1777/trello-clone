@@ -21,10 +21,9 @@ const Root: React.FC<RootProps> = ({ history }) => {
   document.title = "Taskboard";
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const boardsRef = DB_REFS.boards;
-  const starredRef = DB_REFS.starredBoards;
   const isAuthenticated = useSelector(Selectors.isAuthenticated);
   const currentUser = useSelector(Selectors.getCurrentUser);
+  const boards = useSelector(Selectors.getBoards);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -43,18 +42,16 @@ const Root: React.FC<RootProps> = ({ history }) => {
         if ([Constants.URLS.INDEX, Constants.URLS.LOGIN].includes(history.location.pathname)) {
           history.push(Constants.buildUserURI(user.uid));
         }
-        setLoading(false);
       } else {
         dispatch(clearUser());
-        dispatch(clearBoards());
-        setLoading(false);
       }
     });
   }, [history, dispatch]);
 
   useEffect(() => {
+    const boardsRef = DB_REFS.boards;
+    const starredRef = DB_REFS.starredBoards;
     if (isAuthenticated){
-      setLoading(true);
       starredRef.child(currentUser.id).on('value', snap => {
         if (snap.val()) {
           let loaded: string[] = Object.keys(snap.val());
@@ -63,23 +60,28 @@ const Root: React.FC<RootProps> = ({ history }) => {
           dispatch(clearBoardStars());
         }
       });
-      boardsRef.child(currentUser.id).on('value', snap => {
+      boardsRef.child(currentUser.id!).on('value', snap => {
         if (snap.val()) {
-          let allIds = Object.keys(snap.val()).filter(x => snap.val()[x].deleted === false);
-          let byId:any = {};
+          let allIds = Object.keys(snap.val());
+          let byId: any = {};
           allIds.forEach(id => {
             byId[id] = snap.val()[id];
             byId[id].id = id;
           })
-          let loaded: any = { byId, allIds };
+          let loaded: { byId: any, allIds: string[] } = { byId, allIds };
           dispatch(setBoards(loaded));
-          setLoading(false);
         } else {
           dispatch(clearBoards());
         }
       });
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if(boards.length > 0){
+      setLoading(false)
+    }
+  }, [boards])
 
   return !loading ? <App /> : null;
 };

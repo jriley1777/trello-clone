@@ -76,8 +76,10 @@ export const getCardItemsByCard = createSelector(
     }
   }
 );
-
-export const getBoardById = (id: string) => (state: RootState) =>
-  state.boards.boards.byId(id);
+export const getBoardById = createSelector(
+  (state: any) => state.boards.boards,
+  (_: any, boardId: string) => boardId,
+  (boards, boardId) => boards.byId[boardId]
+);
 export const getListById = (id: string) => (state: RootState) => state.boards.lists.byId(id);
 export const getCurrentBoard = (state: RootState) => state.boards.currentBoard;

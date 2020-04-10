@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import firebase, { DB_REFS } from '../../utils/firebase';
@@ -78,7 +78,7 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
     const [open, setOpen] = React.useState(false);
     const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
 
-    useEffect(() => {
+    const addCardItemsListener = useCallback(() => {
         cardItemsRef.child(card.id).on('value', snap => {
             if (snap.val()) {
                 let allIds = Object.keys(snap.val());
@@ -93,11 +93,13 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
                         [card.id]: { ...loaded }
                     }
                 ));
-            } else {
-                dispatch(clearCardItems(card.id))
-            }
+            } 
         })
-    }, [])
+    }, [card.id, cardItemsRef, dispatch ]);
+
+    useEffect(() => {
+        addCardItemsListener();
+    }, [addCardItemsListener]);
 
     const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
         setOpen(true);
