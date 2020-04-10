@@ -13,14 +13,16 @@ const cardItems = createSlice({
   initialState: initialCards,
   reducers: {
     setCardItems(state, action) {
-      const { byId, allIds }: CardItemType = action.payload;
       return {
-        byId,
-        allIds,
+        ...state,
+        ...action.payload
       };
     },
-    clearCardItems(state) {
-      return initialCards;
+    clearCardItems(state, action) {
+      const cardId = action.payload;
+      const updatedState: any = {...state};
+      delete updatedState[cardId];
+      return updatedState;
     },
   },
 });

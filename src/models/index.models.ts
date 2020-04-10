@@ -40,7 +40,7 @@ export interface Card {
   id: string;
   name: string;
   description: string;
-  cardItems: CardItem['id'][];
+  cardItems: any;
 }
 
 
