@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Board } from '../../models/index.models';
+// import { Board } from '../../models/index.models';
 
 type BoardsType = {
   byId?: any,

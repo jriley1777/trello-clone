@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CardItem } from "../../models/index.models";
+// import { CardItem } from "../../models/index.models";
 
 interface CardItemType {
   byId?: any;
@@ -18,12 +18,15 @@ const cardItems = createSlice({
         ...action.payload
       };
     },
-    clearCardItems(state, action) {
+    clearCardItemsById(state, action) {
       const cardId = action.payload;
       const updatedState: any = {...state};
       delete updatedState[cardId];
       return updatedState;
     },
+    clearCardItems() {
+      return initialCards
+    }
   },
 });
 

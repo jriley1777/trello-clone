@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import firebase, { DB_REFS } from '../../utils/firebase';
@@ -19,14 +19,12 @@ import WebIcon from '@material-ui/icons/Web';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Dialog, { DialogProps } from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import * as Selectors from '../../selectors/index';
 import { CardItem } from '../../models/index.models';
-import { setCardItems, clearCardItems } from '../../features/lists/cardItemsSlice';
+import { setCardItems } from '../../features/lists/cardItemsSlice';
 
 const StyledCard = styled(Paper)`
     background: white;
@@ -80,7 +78,7 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
     const [open, setOpen] = React.useState(false);
     const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
 
-    useEffect(() => {
+    const addCardItemsListener = useCallback(() => {
         cardItemsRef.child(card.id).on('value', snap => {
             if (snap.val()) {
                 let allIds = Object.keys(snap.val());
@@ -95,11 +93,14 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
                         [card.id]: { ...loaded }
                     }
                 ));
-            } else {
-                dispatch(clearCardItems(card.id))
-            }
+            } 
         })
-    }, [])
+    }, [card.id, cardItemsRef, dispatch ]);
+
+    useEffect(() => {
+        addCardItemsListener();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [addCardItemsListener]);
 
     const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
         setOpen(true);
