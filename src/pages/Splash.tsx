@@ -102,7 +102,6 @@ const Splash: React.FC<RouteComponentProps> = ({ history }) => {
       let uriEmail = `email=${encodeURI(email)}`;
       let url = `${Constants.URLS.SIGNUP}?${uriEmail}`;
       history.push(url);
-      console.log(email);
     }
   };
   return (

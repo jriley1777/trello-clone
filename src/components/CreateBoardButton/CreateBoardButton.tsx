@@ -37,7 +37,7 @@ const CreateCard = () => {
             .getRandomPhoto({ query: 'nature, aerial', orientation: 'landscape'})
             .then(toJson)
             .then(json => defaultBoard.bg.media = json)
-            .catch(err => console.log(err));
+            .catch(err => {});
         boardsRef.child(currentUser.id).push().set(defaultBoard);
     }
     return (

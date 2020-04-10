@@ -23,14 +23,10 @@ const Root: React.FC<RootProps> = ({ history }) => {
   const [loading, setLoading] = useState(true);
   const isAuthenticated = useSelector(Selectors.isAuthenticated);
   const currentUser = useSelector(Selectors.getCurrentUser);
-  const boards = useSelector(Selectors.getBoards);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        if(process.env.NODE_ENV === 'development') {
-          console.log(user)
-        }
         dispatch(setUser({
           user: {
             email: user.email,
@@ -43,6 +39,7 @@ const Root: React.FC<RootProps> = ({ history }) => {
           history.push(Constants.buildUserURI(user.uid));
         }
       } else {
+        setLoading(false);
         dispatch(clearUser());
       }
     });
@@ -52,14 +49,6 @@ const Root: React.FC<RootProps> = ({ history }) => {
     const boardsRef = DB_REFS.boards;
     const starredRef = DB_REFS.starredBoards;
     if (isAuthenticated){
-      starredRef.child(currentUser.id).on('value', snap => {
-        if (snap.val()) {
-          let loaded: string[] = Object.keys(snap.val());
-          dispatch(setBoardStars(loaded));
-        } else {
-          dispatch(clearBoardStars());
-        }
-      });
       boardsRef.child(currentUser.id!).on('value', snap => {
         if (snap.val()) {
           let allIds = Object.keys(snap.val()).filter(x => snap.val()[x].deleted === false);
@@ -70,18 +59,21 @@ const Root: React.FC<RootProps> = ({ history }) => {
           })
           let loaded: { byId: any, allIds: string[] } = { byId, allIds };
           dispatch(setBoards(loaded));
+          setLoading(false)
         } else {
           dispatch(clearBoards());
         }
       });
+      starredRef.child(currentUser.id).on('value', snap => {
+        if (snap.val()) {
+          let loaded: string[] = Object.keys(snap.val());
+          dispatch(setBoardStars(loaded));
+        } else {
+          dispatch(clearBoardStars());
+        }
+      });
     }
   }, [isAuthenticated, currentUser.id, dispatch]);
-
-  useEffect(() => {
-    if(boards.length > 0){
-      setLoading(false)
-    }
-  }, [boards])
 
   return !loading ? <App /> : null;
 };
