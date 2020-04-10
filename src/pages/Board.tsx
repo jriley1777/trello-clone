@@ -13,7 +13,8 @@ import BoardList from '../components/BoardList/BoardList';
 import * as Selectors from '../selectors/index';
 import { setLists, clearLists } from '../features/lists/listSlice';
 import { setCards, clearCards } from '../features/lists/cardsSlice';
-import { setCurrentBoard } from '../features/boards/currentBoardSlice';
+import { setCurrentBoard, clearCurrentBoard } from '../features/boards/currentBoardSlice';
+import { clearCardItems } from '../features/lists/cardItemsSlice';
 import { Board as BoardType } from '../models/index.models';
 
 const PageWrapper = styled.div<{ bg: any }>`
@@ -107,6 +108,12 @@ const Board = () => {
       updateCurrentBoard(board);
       addCardsListener(board);
       addListsListener(board);
+      return () => {
+        dispatch(clearCurrentBoard());
+        dispatch(clearLists());
+        dispatch(clearCards());
+        dispatch(clearCardItems());
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ setBoardAccessTime, updateCurrentBoard, addCardsListener, addListsListener ])
 

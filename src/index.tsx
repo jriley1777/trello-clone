@@ -62,7 +62,7 @@ const Root: React.FC<RootProps> = ({ history }) => {
       });
       boardsRef.child(currentUser.id!).on('value', snap => {
         if (snap.val()) {
-          let allIds = Object.keys(snap.val());
+          let allIds = Object.keys(snap.val()).filter(x => snap.val()[x].deleted === false);
           let byId: any = {};
           allIds.forEach(id => {
             byId[id] = snap.val()[id];
@@ -75,7 +75,7 @@ const Root: React.FC<RootProps> = ({ history }) => {
         }
       });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, currentUser.id, dispatch]);
 
   useEffect(() => {
     if(boards.length > 0){

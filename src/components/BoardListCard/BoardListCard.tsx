@@ -99,6 +99,7 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
 
     useEffect(() => {
         addCardItemsListener();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [addCardItemsListener]);
 
     const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
