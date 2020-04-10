@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { List } from '../../models/index.models';
+// import { List } from '../../models/index.models';
 
 interface ListsType {
   byId?: any,

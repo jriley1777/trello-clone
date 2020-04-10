@@ -15,7 +15,6 @@ import { setLists, clearLists } from '../features/lists/listSlice';
 import { setCards, clearCards } from '../features/lists/cardsSlice';
 import { setCurrentBoard } from '../features/boards/currentBoardSlice';
 import { Board as BoardType } from '../models/index.models';
-import { setCardItems, clearCardItems } from '../features/lists/cardItemsSlice';
 
 const PageWrapper = styled.div<{ bg: any }>`
   width: 100vw;
@@ -55,7 +54,6 @@ const Board = () => {
     const boardsRef = DB_REFS.boards;
     const listsRef = DB_REFS.lists;
     const cardsRef = DB_REFS.cards;
-    const cardItemsRef = DB_REFS.cardItems;
     const currentLists = useSelector(Selectors.getLists);
 
     useEffect(() => {

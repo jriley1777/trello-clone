@@ -38,7 +38,6 @@ const CreateCard = () => {
             .then(toJson)
             .then(json => defaultBoard.bg.media = json)
             .catch(err => console.log(err));
-        console.log(defaultBoard)
         boardsRef.child(currentUser.id).push().set(defaultBoard);
     }
     return (
