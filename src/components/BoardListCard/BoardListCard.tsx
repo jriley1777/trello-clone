@@ -123,7 +123,7 @@ const BoardListCard: React.FC<BLCProps> = ({ card }) => {
     const handleCardNameChange = (value: string) => {
         cardsRef.child(currentBoard).child(card.id).set({
             ...card,
-            value
+            name: value
         })
     }
     const handleCardDescChange = (value: string) => {
