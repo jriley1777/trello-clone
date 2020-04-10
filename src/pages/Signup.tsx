@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from 'styled-components';
 import firebase, { usersDb } from '../utils/firebase'
 import * as qs from "query-string";
@@ -62,7 +62,7 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
     }
   };
 
-  const handleGoogleRedirect = () => {
+  const handleGoogleRedirect = useCallback(() => {
     firebase
       .auth()
       .getRedirectResult()
@@ -75,18 +75,17 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
         }
         // The signed-in user info.
         var user: any = result.user;
-        db.saveUser(user).then(() => {
-          console.log("user saved.");
-        });
+        db.saveUser(user);
         history.push(Constants.buildUserURI(user.uid));
       })
       .catch(err => {
         setErrors([{ message: err.message }]);
       });
-  };
+  }, [db, history]);
 
   useEffect(() => {
     handleGoogleRedirect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleGoogleLogin = () => {
@@ -102,17 +101,17 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
     }
   };
 
-  const parseURIParams = () => {
+  const parseURIParams = useCallback(() => {
     let params = qs.parseUrl(location.search);
     let parsedEmail = params && params.query.email;
     if (parsedEmail && typeof parsedEmail === "string") {
       setEmail(parsedEmail);
     }
-  };
+  }, [location.search]);
 
   useEffect(() => {
     parseURIParams();
-  }, []);
+  }, [parseURIParams]);
 
   return (
     <AuthLayout>

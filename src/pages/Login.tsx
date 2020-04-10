@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styled from 'styled-components';
 import firebase, { usersDb } from '../utils/firebase';
-import { Link as RouterLink, RouteComponentProps } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
 import Button from '@material-ui/core/Button';
@@ -19,12 +19,13 @@ const StyledGridContainer = styled(Grid)`
   }
 `;
 
-const Login: React.FC<RouteComponentProps> = ({ history }) => {
+const Login: React.FC = () => {
   document.title = "Login to Taskboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<ErrorsArrayType>([]);
   const db: any = usersDb();
+  const history = useHistory();
 
   const isValidForm = () => email && password;
 
@@ -39,11 +40,11 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
     }
   };
 
-  const handleGoogleRedirect = () => {
+  const handleGoogleRedirect = useCallback(() => {
     firebase
       .auth()
       .getRedirectResult()
-      .then(function(result) {
+      .then(function (result) {
         if (result.credential) {
           console.log(result);
           // This gives you a Google Access Token. You can use it to access the Google API.
@@ -60,10 +61,11 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
       .catch(err => {
         setErrors([{ message: err.message }]);
       });
-  };
+  }, [db, history])
 
   useEffect(() => {
     handleGoogleRedirect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleGoogleLogin = () => {
@@ -131,6 +133,9 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
                 Log in with Google
               </Button>
             </Grid>
+            {/* <Grid item>
+              { errors.map(err => err.message).join(" ") }
+            </Grid> */}
             <Grid item>
               <Link component={RouterLink} to={Constants.URLS.SIGNUP}>
                 <h4>Sign up for an account.</h4>

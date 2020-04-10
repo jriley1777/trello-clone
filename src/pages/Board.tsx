@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,9 +13,9 @@ import BoardList from '../components/BoardList/BoardList';
 import * as Selectors from '../selectors/index';
 import { setLists, clearLists } from '../features/lists/listSlice';
 import { setCards, clearCards } from '../features/lists/cardsSlice';
-import { setCurrentBoard } from '../features/boards/currentBoardSlice';
+import { setCurrentBoard, clearCurrentBoard } from '../features/boards/currentBoardSlice';
+import { clearCardItems } from '../features/lists/cardItemsSlice';
 import { Board as BoardType } from '../models/index.models';
-import { setCardItems, clearCardItems } from '../features/lists/cardItemsSlice';
 
 const PageWrapper = styled.div<{ bg: any }>`
   width: 100vw;
@@ -48,25 +48,26 @@ const StyledAttribution = styled.div`
 const Board = () => {
     const dispatch = useDispatch();
     const { boardId } = useParams();
-    const boards = useSelector(Selectors.getBoards);
     const currentUser = useSelector(Selectors.getCurrentUser);
-    const board = boards.find(x => x.id === boardId)!;
-    document.title = `${board.name} | Tdaskboard`;
+    const boards = useSelector(Selectors.getBoards);
+    const board = boards.find(board => board.id === boardId!)!; //TODO: selector memoization
+    document.title = `${board.name} | Taskboard`;
     const boardsRef = DB_REFS.boards;
     const listsRef = DB_REFS.lists;
     const cardsRef = DB_REFS.cards;
-    const cardItemsRef = DB_REFS.cardItems;
     const currentLists = useSelector(Selectors.getLists);
 
-    useEffect(() => {
-      dispatch(setCurrentBoard(boardId));
+    const setBoardAccessTime = useCallback((board) => {
       let updatedBoard = {
         ...board,
         lastAccessTime: firebase.database.ServerValue.TIMESTAMP
       }
-      boardsRef.child(currentUser.id).child(boardId!).set(updatedBoard);
-      listsRef.child(boardId!).on('value', snap => {
-        if(snap.val()){
+      boardsRef.child(currentUser.id).child(board.id!).set(updatedBoard); 
+    }, [boardsRef, currentUser.id]);
+
+    const addListsListener = useCallback((board) => {
+      listsRef.child(board.id!).on('value', snap => {
+        if (snap.val()) {
           let allIds = Object.keys(snap.val());
           let byId: any = {};
           allIds.forEach(id => {
@@ -78,8 +79,11 @@ const Board = () => {
         } else {
           dispatch(clearLists());
         }
-      });
-      cardsRef.child(boardId!).on('value', snap => {
+      }); 
+    }, [listsRef, dispatch]);
+
+    const addCardsListener = useCallback((board) => {
+      cardsRef.child(board.id!).on('value', snap => {
         if (snap.val()) {
           let allIds = Object.keys(snap.val());
           let byId: any = {};
@@ -93,11 +97,25 @@ const Board = () => {
           dispatch(clearCards())
         }
       })
+    }, [cardsRef, dispatch]);
+
+    const updateCurrentBoard = useCallback((board) => {
+      dispatch(setCurrentBoard(board.id));
+    }, [dispatch])
+
+    useEffect(() => {
+      setBoardAccessTime(board);
+      updateCurrentBoard(board);
+      addCardsListener(board);
+      addListsListener(board);
       return () => {
-        listsRef.child(boardId!).off('value');
+        dispatch(clearCurrentBoard());
         dispatch(clearLists());
+        dispatch(clearCards());
+        dispatch(clearCardItems());
       }
-    }, [])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ setBoardAccessTime, updateCurrentBoard, addCardsListener, addListsListener ])
 
     const renderUnsplashCredit = (board: BoardType) => {
       if(board!.bg.media){
@@ -117,7 +135,7 @@ const Board = () => {
     }
 
     const handleListCreate = (list: {list: string}) => {
-      listsRef.child(boardId!).push().set({
+      listsRef.child(board.id!).push().set({
         createdAt: firebase.database.ServerValue.TIMESTAMP,
         lastUpdatedAt: firebase.database.ServerValue.TIMESTAMP,
         createdBy: currentUser.id,

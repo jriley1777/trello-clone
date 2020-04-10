@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Card } from "../../models/index.models";
+// import { Card } from "../../models/index.models";
 
 interface CardsType {
   byId?: any;
