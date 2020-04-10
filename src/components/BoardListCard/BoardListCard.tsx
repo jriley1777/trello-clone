@@ -24,7 +24,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import * as Selectors from '../../selectors/index';
 import { CardItem } from '../../models/index.models';
-import { setCardItems, clearCardItems } from '../../features/lists/cardItemsSlice';
+import { setCardItems } from '../../features/lists/cardItemsSlice';
 
 const StyledCard = styled(Paper)`
     background: white;
