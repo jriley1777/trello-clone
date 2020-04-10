@@ -39,7 +39,8 @@ export interface Card {
   list: List["id"];
   id: string;
   name: string;
-  cardItems: CardItem['id'][];
+  description: string;
+  cardItems: any;
 }
 
 

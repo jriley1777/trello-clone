@@ -63,6 +63,19 @@ export const getCardsByList = createSelector(
     }
   }
 );
+export const getCardItemsByCard = createSelector(
+  (state: any) => state.boards.cardItems,
+  (_: any, cardId: string) => cardId,
+  (cardItems, cardId) => {
+    if (cardItems && cardItems[cardId]) {
+      return cardItems[cardId].allIds.map(
+        (id: string) => cardItems[cardId].byId[id]
+      );
+    } else {
+      return [];
+    }
+  }
+);
 
 export const getBoardById = (id: string) => (state: RootState) =>
   state.boards.boards.byId(id);
