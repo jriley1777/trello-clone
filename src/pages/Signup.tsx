@@ -60,31 +60,6 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
     }
   };
 
-  const handleGoogleRedirect = useCallback(() => {
-    firebase
-      .auth()
-      .getRedirectResult()
-      .then(function(result) {
-        if (result.credential) {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          // var token = result.credential.accessToken;
-          // ...
-        }
-        // The signed-in user info.
-        var user: any = result.user;
-        db.saveUser(user);
-        history.push(Constants.buildUserURI(user.uid));
-      })
-      .catch(err => {
-        setErrors([{ message: err.message }]);
-      });
-  }, [db, history]);
-
-  useEffect(() => {
-    handleGoogleRedirect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleGoogleLogin = () => {
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);

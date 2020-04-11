@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 import styled from 'styled-components';
-import firebase, { usersDb } from '../utils/firebase';
+import firebase from '../utils/firebase';
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
@@ -24,7 +24,6 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<ErrorsArrayType>([]);
-  const db: any = usersDb();
   const history = useHistory();
 
   const isValidForm = () => email && password;
@@ -39,31 +38,6 @@ const Login: React.FC = () => {
         .catch(err => setErrors([{ message: err.message }]));
     }
   };
-
-  const handleGoogleRedirect = useCallback(() => {
-    firebase
-      .auth()
-      .getRedirectResult()
-      .then(function (result) {
-        if (result.credential) {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          // var token = result.credential.accessToken;
-          // ...
-        }
-        // The signed-in user info.
-        var user: any = result.user;
-        db.saveUser(user);
-        history.push(Constants.buildUserURI(user.uid));
-      })
-      .catch(err => {
-        setErrors([{ message: err.message }]);
-      });
-  }, [db, history])
-
-  useEffect(() => {
-    handleGoogleRedirect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleGoogleLogin = () => {
     var provider = new firebase.auth.GoogleAuthProvider();

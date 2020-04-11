@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, useHistory,  } from "react-router-dom";
-import firebase, {DB_REFS} from './utils/firebase';
+import { BrowserRouter as Router, useHistory } from "react-router-dom";
+import firebase, { usersDb } from "./utils/firebase";
 import './index.css';
 import App from './app/App';
-import { Provider, useDispatch, useSelector } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { setUser, clearUser } from './features/auth/authSlice';
-import { setBoards, clearBoards } from './features/boards/boardsSlice';
-import { setBoardStars, clearBoardStars } from './features/boards/starsSlice';
 import * as Constants from './constants/index';
-import * as Selectors from './selectors/index';
 
 import store from './utils/redux';
 
@@ -19,8 +16,32 @@ const Root: React.FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const isAuthenticated = useSelector(Selectors.isAuthenticated);
-  const currentUser = useSelector(Selectors.getCurrentUser);
+  const db: any = usersDb();
+
+  const handleGoogleRedirect = useCallback(() => {
+    firebase
+      .auth()
+      .getRedirectResult()
+      .then(function (result) {
+        if (result.credential) {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          // var token = result.credential.accessToken;
+          // ...
+        }
+        // The signed-in user info.
+        var user: any = result.user;
+        history.push(Constants.buildUserURI(user.uid));
+        db.saveUser(user);
+      })
+      .catch((err) => {
+        console.error(err)
+      });
+  }, [db, history]);
+
+  useEffect(() => {
+    handleGoogleRedirect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -36,42 +57,13 @@ const Root: React.FC = () => {
         if ([Constants.URLS.INDEX, Constants.URLS.LOGIN].includes(history.location.pathname)) {
           history.push(Constants.buildUserURI(user.uid));
         }
+        setLoading(false);
       } else {
         setLoading(false);
         dispatch(clearUser());
       }
     });
   }, [history, dispatch]);
-
-  useEffect(() => {
-    const boardsRef = DB_REFS.boards;
-    const starredRef = DB_REFS.starredBoards;
-    if (isAuthenticated){
-      boardsRef.child(currentUser.id!).on('value', snap => {
-        if (snap.val()) {
-          let allIds = Object.keys(snap.val()).filter(x => snap.val()[x].deleted === false);
-          let byId: any = {};
-          allIds.forEach(id => {
-            byId[id] = snap.val()[id];
-            byId[id].id = id;
-          })
-          let loaded: { byId: any, allIds: string[] } = { byId, allIds };
-          dispatch(setBoards(loaded));
-          setLoading(false)
-        } else {
-          dispatch(clearBoards());
-        }
-      });
-      starredRef.child(currentUser.id).on('value', snap => {
-        if (snap.val()) {
-          let loaded: string[] = Object.keys(snap.val());
-          dispatch(setBoardStars(loaded));
-        } else {
-          dispatch(clearBoardStars());
-        }
-      });
-    }
-  }, [isAuthenticated, currentUser.id, dispatch]);
 
   return !loading ? <App /> : null;
 };
