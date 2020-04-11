@@ -46,16 +46,13 @@ const Login: React.FC = () => {
       .getRedirectResult()
       .then(function (result) {
         if (result.credential) {
-          console.log(result);
           // This gives you a Google Access Token. You can use it to access the Google API.
           // var token = result.credential.accessToken;
           // ...
         }
         // The signed-in user info.
         var user: any = result.user;
-        db.saveUser(user).then(() => {
-          console.log("user saved.");
-        });
+        db.saveUser(user);
         history.push(Constants.buildUserURI(user.uid));
       })
       .catch(err => {
@@ -81,11 +78,15 @@ const Login: React.FC = () => {
             container
             direction="column"
             spacing={2}
-            justify="space-evenly"
+            justify="center"
             alignItems="center"
           >
             <Grid item>
-              <h2>Log in to {Constants.APP_NAME}</h2>
+              <Grid container direction="row" justify="center">
+                <Grid item>
+                  <h2>Log in to {Constants.APP_NAME}</h2>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item>
               <TextField
@@ -137,9 +138,13 @@ const Login: React.FC = () => {
               { errors.map(err => err.message).join(" ") }
             </Grid> */}
             <Grid item>
-              <Link component={RouterLink} to={Constants.URLS.SIGNUP}>
-                <h4>Sign up for an account.</h4>
-              </Link>
+              <Grid container direction="row" justify="center">
+                <Grid item>
+                  <Link component={RouterLink} to={Constants.URLS.SIGNUP}>
+                    <h4>Sign up for an account.</h4>
+                  </Link> 
+                </Grid>
+              </Grid>
             </Grid>
           </StyledGridContainer>
         </form>

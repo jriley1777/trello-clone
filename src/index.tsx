@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, withRouter,  } from "react-router-dom";
+import { BrowserRouter as Router, useHistory,  } from "react-router-dom";
 import firebase, {DB_REFS} from './utils/firebase';
 import './index.css';
 import App from './app/App';
@@ -14,11 +14,9 @@ import * as Selectors from './selectors/index';
 
 import store from './utils/redux';
 
-interface RootProps {
-  history: any
-}
-const Root: React.FC<RootProps> = ({ history }) => {
+const Root: React.FC = () => {
   document.title = "Taskboard";
+  const history = useHistory();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const isAuthenticated = useSelector(Selectors.isAuthenticated);
@@ -78,13 +76,11 @@ const Root: React.FC<RootProps> = ({ history }) => {
   return !loading ? <App /> : null;
 };
 
-const RootWithAuth = withRouter(Root);
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
-        <RootWithAuth />
+        <Root />
       </Router>
     </Provider>
   </React.StrictMode>,

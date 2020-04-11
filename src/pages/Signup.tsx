@@ -45,9 +45,7 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
               displayName: name
             })
             .then(() => {
-              db.saveUser(user).then(() => {
-                console.log("user saved.");
-              });
+              db.saveUser(user);
             })
             .catch((err: any) => {
               setErrors([{ message: err.message }]);
@@ -68,7 +66,6 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
       .getRedirectResult()
       .then(function(result) {
         if (result.credential) {
-          console.log(result);
           // This gives you a Google Access Token. You can use it to access the Google API.
           // var token = result.credential.accessToken;
           // ...
@@ -125,7 +122,11 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
             alignItems="center"
           >
             <Grid item>
-              <h2>Sign up to {Constants.APP_NAME}</h2>
+              <Grid container direction="row" justify="center">
+                <Grid item>
+                  <h2>Sign up to {Constants.APP_NAME}</h2>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item>
               <TextField
@@ -167,7 +168,11 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
               />
             </Grid>
             <Grid item>
-              <p>Legal things: TOS and Privacy Policy</p>
+              <Grid container direction="row" justify="center">
+                <Grid item>
+                  <p>Legal things: TOS and Privacy Policy</p> 
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item>
               <Button
@@ -192,9 +197,13 @@ const Signup: React.FC<RouteComponentProps> = ({ location, history }) => {
               </Button>
             </Grid>
             <Grid item>
-              <Link component={RouterLink} to={Constants.URLS.LOGIN}>
-                <h4>Already have an account?</h4>
-              </Link>
+              <Grid container direction="row" justify="center">
+                <Grid item>
+                  <Link component={RouterLink} to={Constants.URLS.LOGIN}>
+                    <h4>Already have an account?</h4>
+                  </Link>
+                </Grid>
+              </Grid>
             </Grid>
           </StyledGridContainer>
         </form>

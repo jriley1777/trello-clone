@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import firebase from '../../utils/firebase';
 import { useSelector } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
@@ -40,11 +40,12 @@ const StyledIconButton = styled(IconButton)`
   border-radius: 5px;
 `;
 
-interface HeaderProps extends RouteComponentProps {
+interface HeaderProps {
     background?: boolean
 }
 
-const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
+const AppHeader: React.FC<HeaderProps> = ({ background=false }) => {
+    const history = useHistory();
     const currentUser = useSelector(Selectors.getCurrentUser);
     const { name, photoURL, id } = currentUser;
 
@@ -71,12 +72,14 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
 
     return (
       <StyledHeader bg={background}>
+        {console.log('render')}
+
         <Grid
           container
           direction="row"
-          justify="space-between"
+          justify="center"
           alignItems="center"
-          style={{ padding: "0 5px 0 5px" }}
+          style={{ padding: "0 4px 0 4px" }}
         >
           <Grid item xs={4}>
             <Grid container direction="row" justify="flex-start">
@@ -100,7 +103,9 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
             </Grid>
           </Grid>
           <Grid item xs={4}>
-            <AppTitle light to={Constants.buildUserURI(id)} />
+            <Grid container direction="row" justify="center">
+              <AppTitle light to={Constants.buildUserURI(id)} />
+            </Grid>
           </Grid>
           <Grid item xs={4}>
             <Grid container direction="row" justify="flex-end">
@@ -145,4 +150,4 @@ const AppHeader: React.FC<HeaderProps> = ({ history, background=false }) => {
     );
 };
 
-export default withRouter(AppHeader);
+export default React.memo(AppHeader);
