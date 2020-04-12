@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Paper from "@material-ui/core/Paper";
 
 const StyledPaper = styled(Paper)`
-  background: #ddd;
+//   background: rgb(250,251,252);
   color: rgb(94, 108, 131) !important;
   font-size: 0.75rem;
   min-height: 60vh;
