@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 import styled from 'styled-components';
-import firebase, { usersDb } from '../utils/firebase';
+import firebase from '../utils/firebase';
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
@@ -24,7 +24,6 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<ErrorsArrayType>([]);
-  const db: any = usersDb();
   const history = useHistory();
 
   const isValidForm = () => email && password;
@@ -40,34 +39,6 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleGoogleRedirect = useCallback(() => {
-    firebase
-      .auth()
-      .getRedirectResult()
-      .then(function (result) {
-        if (result.credential) {
-          console.log(result);
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          // var token = result.credential.accessToken;
-          // ...
-        }
-        // The signed-in user info.
-        var user: any = result.user;
-        db.saveUser(user).then(() => {
-          console.log("user saved.");
-        });
-        history.push(Constants.buildUserURI(user.uid));
-      })
-      .catch(err => {
-        setErrors([{ message: err.message }]);
-      });
-  }, [db, history])
-
-  useEffect(() => {
-    handleGoogleRedirect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleGoogleLogin = () => {
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
@@ -81,11 +52,15 @@ const Login: React.FC = () => {
             container
             direction="column"
             spacing={2}
-            justify="space-evenly"
+            justify="center"
             alignItems="center"
           >
             <Grid item>
-              <h2>Log in to {Constants.APP_NAME}</h2>
+              <Grid container direction="row" justify="center">
+                <Grid item>
+                  <h2>Log in to {Constants.APP_NAME}</h2>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item>
               <TextField
@@ -137,9 +112,13 @@ const Login: React.FC = () => {
               { errors.map(err => err.message).join(" ") }
             </Grid> */}
             <Grid item>
-              <Link component={RouterLink} to={Constants.URLS.SIGNUP}>
-                <h4>Sign up for an account.</h4>
-              </Link>
+              <Grid container direction="row" justify="center">
+                <Grid item>
+                  <Link component={RouterLink} to={Constants.URLS.SIGNUP}>
+                    <h4>Sign up for an account.</h4>
+                  </Link> 
+                </Grid>
+              </Grid>
             </Grid>
           </StyledGridContainer>
         </form>
